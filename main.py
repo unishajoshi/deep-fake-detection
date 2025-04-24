@@ -63,7 +63,7 @@ if "test_df" not in st.session_state:
     
 #------------------ Section for: TITLE --------------
 st.set_page_config(page_title="Deepfake Dataset Builder", layout="wide")
-st.title("🧠 Age-Diverse Deepfake Dataset Pipeline")
+st.title("Age Diverse Deepfake Dataset Bridging the Age Gap in Deepfake Detection")
 
 #------------------ Section for: SIDEBAR --------------
 with st.sidebar.expander("❓ Help & Instructions", expanded=False):
