@@ -72,7 +72,7 @@ def prepare_data_split(metadata_path):
     train_df.to_csv("train_split.csv", index=False)
     test_df.to_csv("test_split.csv", index=False)
 
-
+    return train_df, test_df
 # ------------------------------
 # Model Factory
 # ------------------------------

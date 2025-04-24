@@ -37,8 +37,8 @@ def balance_dataset(metadata_path, method="oversample"):
     balanced_dfs = []
 
     for (age_group), group_df in df.groupby("age_group"):
-        real_df = group_df[group_df["label"] == 0]
-        fake_df = group_df[group_df["label"] == 1]
+        real_df = group_df[group_df["label"] == "real"]
+        fake_df = group_df[group_df["label"] == "fake"]
 
         if method == "oversample":
             max_len = max(len(real_df), len(fake_df))
@@ -88,7 +88,7 @@ def export_balanced_dataset(balanced_csv="balanced_annotations.csv", output_dir=
 
     # Save a copy of the balanced CSV
     df.to_csv(os.path.join(output_dir, "balanced_annotations.csv"), index=False)
-
+    df.to_csv("balanced_annotations.csv")
     return copied, missing, output_dir
 
 

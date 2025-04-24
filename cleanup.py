@@ -34,7 +34,7 @@ def clean_import_directory(video_dir="all_data_videos", frames_dir="all_data_fra
         print(f"✅ Removed: {annotation_file}")
 
     # Clear extracted frames
-    fast_clear_folder(frames_dir)
+    clear_folder(frames_dir)
 
     print("✅ All imports and frame folders cleaned.")
     return True

@@ -978,8 +978,10 @@ if st.button("🎯 Run Grad-CAM"):
 # ✅ Display persistent Grad-CAM results
 if st.session_state.gradcam_done:
     st.markdown("### 🎨 Grad-CAM Results")
-    display_images_in_grid(st.session_state.gradcam_real_images, st.session_state.gradcam_real_captions, title="🟢 Real Samples")
-    display_images_in_grid(st.session_state.gradcam_fake_images, st.session_state.gradcam_fake_captions, title="🔴 Fake Samples")
+    col1, col2, col3 = st.columns([1, 4, 1])
+    with col2:
+        display_images_in_grid(st.session_state.gradcam_real_images, st.session_state.gradcam_real_captions, title="🟢 Real Samples")
+        display_images_in_grid(st.session_state.gradcam_fake_images, st.session_state.gradcam_fake_captions, title="🔴 Fake Samples")
 
 st.markdown("---")   
 #------------------ Section for: Project Report PDF Download Export --------------
