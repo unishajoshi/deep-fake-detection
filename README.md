@@ -56,7 +56,7 @@ http://localhost:8501/
 ## Sample Dataset
 
 You can request public datasets from:
-- [UTKFace]((https://susanqq.github.io/UTKFace/))
+- [UTKFace](https://susanqq.github.io/UTKFace/)
 - [Celeb-DF](https://github.com/yuezunli/celeb-deepfakeforensics)
 - [FaceForensics++](https://github.com/ondyari/FaceForensics)
 
