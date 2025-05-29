@@ -28,8 +28,8 @@ def preprocess_frames(input_dir, output_dir, target_size=(224, 224)):
     return output_dir
 
 
-def balance_dataset(metadata_path, method="oversample"):
-    """
+def balance_dataset(metadata_path):
+    """0
     Balance dataset by both age group and label (real/fake).
     Ensures each age group has an equal number of real and fake samples.
     """
@@ -39,19 +39,17 @@ def balance_dataset(metadata_path, method="oversample"):
     for (age_group), group_df in df.groupby("age_group"):
         real_df = group_df[group_df["label"] == "real"]
         fake_df = group_df[group_df["label"] == "fake"]
-
-        if method == "oversample":
-            max_len = max(len(real_df), len(fake_df))
-            real_balanced = real_df.sample(max_len, replace=True)
-            fake_balanced = fake_df.sample(max_len, replace=True)
-        elif method == "undersample":
-            min_len = min(len(real_df), len(fake_df))
-            real_balanced = real_df.sample(min_len, replace=False)
-            fake_balanced = fake_df.sample(min_len, replace=False)
-        else:
-            raise ValueError("Method must be 'oversample' or 'undersample'.")
+        
+        min_len = min(len(real_df), len(fake_df))
+        if min_len == 0:
+            continue
+            
+        real_balanced = real_df.sample(min_len, replace=False)
+        fake_balanced = fake_df.sample(min_len, replace=False)
 
         balanced_dfs.append(pd.concat([real_balanced, fake_balanced]))
+    if not balanced_dfs:
+        raise ValueError("No balanced groups could be created. Ensure each age group has both real and fake samples.")
 
     df_balanced = pd.concat(balanced_dfs).sample(frac=1).reset_index(drop=True)
     df_balanced.to_csv("balanced_metadata.csv", index=False)
@@ -98,7 +96,7 @@ def generate_frame_level_annotations(
 ):
     # Auto-select input/output files based on mode
     if mode == "annotated":
-        video_csv = "annotations.csv"
+        video_csv = "all_data_videos/annotations.csv"
         output_csv = "frame_level_annotations_original.csv"
     elif mode == "balanced":
         video_csv = "balanced_annotations.csv"

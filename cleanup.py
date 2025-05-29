@@ -1,5 +1,6 @@
 import os
 import shutil
+import cv2
 
 #---------------------section: Cleanup the files and folders---------------------------
 def remove_readonly(func, path, _):

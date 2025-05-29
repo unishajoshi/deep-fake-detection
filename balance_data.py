@@ -1,10 +1,11 @@
 import os
 import pandas as pd
 from data_preprocessing import balance_dataset, export_balanced_dataset, generate_frame_level_annotations
+
 from visualization import get_age_label_source_table
 import streamlit as st
 
-def balance_and_export_dataset(method="oversample"):
+def balance_and_export_dataset():
     result = {
         "pre_distribution": None,
         "post_distribution": None,
@@ -16,7 +17,7 @@ def balance_and_export_dataset(method="oversample"):
         "messages": [],
     }
 
-    if not os.path.exists("annotations.csv"):
+    if not os.path.exists("all_data_videos/annotations.csv"):
         result["messages"].append("❌ annotations.csv not found. Please run age annotation first.")
         return result
 
@@ -25,11 +26,17 @@ def balance_and_export_dataset(method="oversample"):
     if os.path.exists("frame_level_annotations.csv"):
         os.remove("frame_level_annotations.csv")
 
-    df = pd.read_csv("annotations.csv")
-    result["pre_distribution"] = get_age_label_source_table("annotations.csv")
+    df = pd.read_csv("all_data_videos/annotations.csv")
+    result["pre_distribution"] = get_age_label_source_table("all_data_videos/annotations.csv")
 
     # Balance
-    df_balanced = balance_dataset("annotations.csv", method=method)
+    try:
+        df_balanced = balance_dataset("all_data_videos/annotations.csv")
+    except ValueError as ve:
+        result["messages"].append(str(ve))
+        result["status"] = "error"
+        return result
+        
     df_balanced.to_csv("balanced_annotations.csv", index=False)
     result["post_distribution"] = get_age_label_source_table("balanced_annotations.csv")
 

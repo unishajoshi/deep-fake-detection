@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def get_age_label_source_table(annotation_file="annotations.csv"):
+def get_age_label_source_table(annotation_file="all_data_videos/annotations.csv"):
     try:
         df = pd.read_csv(annotation_file)
         df["label_age"] = df["label"] + " (" + df["age_group"] + ")"
@@ -50,45 +50,48 @@ def visualize_age_distribution(df):
     return fig
 
 #------------------ Section for: VISUALIZING THE age distribution for SOURCE --------------
-def show_age_distribution_pie_charts(annotation_file="annotations.csv", return_figures=False):
+
+def show_age_distribution_pie_charts(annotation_file="all_data_videos/annotations.csv", return_figures=False):
     figures = []
 
     try:
         df = pd.read_csv(annotation_file)
+        if "label" not in df.columns or "source" not in df.columns:
+            st.error("Required columns `label` and `source` not found in annotations.")
+            return []
+
+        sources = df["source"].unique()
+        label_colors = {"real": "#1f77b4", "fake": "#ff7f0e"}  # 🔵 blue, 🟠 orange
 
         if not return_figures:
-            st.markdown("### 🥧 Age Group Distribution by Source")
-            col1, col2, col3, col4 = st.columns([1, 2, 2, 1])
+            st.markdown("### 🥧 Age Group Distribution by Source and Label")
+            st.markdown("🔵 **Real**  🟠 **Fake**")
 
-        # celeb chart
-        celeb_df = df[df["source"] == "celeb"]
-        if not celeb_df.empty:
-            fig1, ax1 = plt.subplots()
-            celeb_counts = celeb_df['age_group'].value_counts().sort_index()
-            ax1.pie(celeb_counts, labels=celeb_counts.index, autopct='%1.1f%%', startangle=90)
-            ax1.axis('equal')
+        cols = st.columns(3)
 
+        for i, source in enumerate(sorted(sources)):
+            sub_df = df[df["source"] == source]
+            label_counts = sub_df["label"].value_counts().reindex(["real", "fake"], fill_value=0)
+            
+            label_counts = label_counts[label_counts > 0]
+
+            if label_counts.empty:
+                continue  # Skip empty charts
+            
+            fig, ax = plt.subplots()
+            wedges, texts, autotexts = ax.pie(
+                label_counts.values,
+                labels=label_counts.index,
+                autopct='%1.1f%%',
+                colors=[label_colors[label] for label in label_counts.index],
+                startangle=90
+            )
+            ax.axis("equal")
             if return_figures:
-                figures.append(("celeb", fig1))
+                figures.append((source, fig))
             else:
-                with col2:
-                    st.markdown("#### 🟢 celeb")
-                    st.pyplot(fig1)
-
-        # FaceForensics++ chart
-        ff_df = df[df["source"] == "faceforensics"]
-        if not ff_df.empty:
-            fig2, ax2 = plt.subplots()
-            ff_counts = ff_df['age_group'].value_counts().sort_index()
-            ax2.pie(ff_counts, labels=ff_counts.index, autopct='%1.1f%%', startangle=90)
-            ax2.axis('equal')
-
-            if return_figures:
-                figures.append(("FaceForensics++", fig2))
-            else:
-                with col3:
-                    st.markdown("#### 🔵 FaceForensics++")
-                    st.pyplot(fig2)
+                with cols[i % 3]:
+                    st.pyplot(fig)
 
     except FileNotFoundError:
         if not return_figures:
