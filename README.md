@@ -10,10 +10,12 @@ and intuitive Streamlit-based web interface, making it usable even by non-progra
 ## Features
 This Streamlit app helps researchers create and analyze a deepfake dataset balanced across age groups. It supports video import, age annotation, model training, evaluation, and PDF report generation. The key features of this application are was follows:
 
-- Upload videos from different sources (e.g., Celeb-DF, FaceForensics++)
+- Upload image and videos from different sources (e.g., UTKFace, Celeb-DF, FaceForensics++)
 - Frame-level extraction 
 - Age annotation using DeepFace
 - Dataset cleaning, preprocessing, and age group balancing
+- Synthetic data creation using SimSwap Framework
+- Synthetic data quality evalaution
 - Model training:
   - **XceptionNet**, **EfficientNet**, **LipForensics**
 - Evaluation metrics: AUC, pAUC, EER (overall + per age group)
@@ -54,6 +56,7 @@ http://localhost:8501/
 ## Sample Dataset
 
 You can request public datasets from:
+- [UTKFace]((https://susanqq.github.io/UTKFace/))
 - [Celeb-DF](https://github.com/yuezunli/celeb-deepfakeforensics)
 - [FaceForensics++](https://github.com/ondyari/FaceForensics)
 
@@ -61,7 +64,8 @@ Filter videos using the metadata provided in this app.
 
 ## Acknowledgements
 
-Developed by **Unisha Joshi** as part of a Capstone project.
+Developed by **Unisha Joshi** as part of a Capstone project. 
+**Research Purpose Only**
 
 ---
 
