@@ -38,14 +38,14 @@ def annotate_single_video(video_path, frame_dir, index=None, total=None):
 
         if not matching_frames:
             print(f"⚠️ No frames found for: {video_name}")
-            return None, random.choice(["0-10", "10-19", "19-35", "36-50", "51+"])
+            return None, None
 
         frame_path = random.choice(matching_frames)
         frame = cv2.imread(frame_path)
 
         if frame is None:
             print(f"❌ Failed to load frame: {frame_path}")
-            return None, random.choice(["0-10", "10-19", "19-35", "36-50", "51+"])
+            return None, None
 
         result = DeepFace.analyze(
             img_path=frame,
@@ -63,7 +63,7 @@ def annotate_single_video(video_path, frame_dir, index=None, total=None):
 
     except Exception as e:
         print(f"❌ DeepFace error on {video_path}: {e}")
-        return None, random.choice(["0-10", "10-19", "19-35", "36-50", "51+"])
+        return None, None
 
 
 def save_age_annotations_parallel(
@@ -72,19 +72,20 @@ def save_age_annotations_parallel(
     batch_mode=False,
     num_workers=None,
     streamlit_progress=None,
-    frame_dir="all_data_frames"):
+    frame_dir="all_data_frames"
+):
     if os.path.exists(output_csv):
         existing_df = pd.read_csv(output_csv)
-        # Drop rows where source is 'celeb' or 'faceforensics'
-        existing_df = existing_df[~existing_df["source"].isin(["celeb", "faceforensics","synthetic"])]
+        # Drop rows where source is 'celeb' or 'faceforensics' or 'synthetic'
+        existing_df = existing_df[~existing_df["source"].isin(["celeb", "faceforensics", "synthetic"])]
     else:
         existing_df = pd.DataFrame()
 
-    full_paths = []
-    for root, _, files in os.walk(video_dir):
-        for f in files:
-            if f.endswith(('.mp4', '.avi')):
-                full_paths.append(os.path.join(root, f))
+    full_paths = [
+        os.path.join(root, f)
+        for root, _, files in os.walk(video_dir)
+        for f in files if f.endswith(('.mp4', '.avi'))
+    ]
 
     if not batch_mode:
         print(f"🧠 Annotating {len(full_paths)} videos using parallel processing...")
@@ -104,15 +105,17 @@ def save_age_annotations_parallel(
             path = futures[future]
             filename = os.path.basename(path)
             label = "fake" if "fake" in filename.lower() else "real"
+            source = "celeb" if "celeb" in filename.lower() else (
+                     "faceforensics" if "faceforensics" in filename.lower() else "unknown")
 
             try:
                 real_age, age_group = future.result()
+                if real_age is None and age_group is None:
+                    print(f"⚠️ Skipping annotation for: {filename} (no valid frame)")
+                    continue  # ⛔ Skip this video
             except Exception as e:
                 print(f"❌ Error annotating {filename}: {e}")
-                real_age, age_group = None, random.choice(["0-10", "10-19", "19-35", "36-50", "51+"])
-
-            source = "celeb" if "celeb" in filename.lower() else (
-                     "faceforensics" if "faceforensics" in filename.lower() else "unknown")
+                continue  # ⛔ Also skip on error
 
             metadata.append({
                 "filename": filename,
@@ -127,7 +130,6 @@ def save_age_annotations_parallel(
         streamlit_progress.empty()
 
     new_df = pd.DataFrame(metadata)
-
     df = pd.concat([existing_df, new_df], ignore_index=True)
     df.drop_duplicates(subset=["filename", "path"], inplace=True)
 
@@ -138,6 +140,5 @@ def save_age_annotations_parallel(
         print(f"✅ Parallel annotation complete. Saved to {output_csv}")
 
     return df
-
 
 
