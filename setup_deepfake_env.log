@@ -1,0 +1,798 @@
+[START] Logging to setup_deepfake_env.log 
+------------------------------ 
+[STEP 1] Creating Conda environment 
+Channels:
+ - defaults
+Platform: win-64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+
+==> WARNING: A newer version of conda exists. <==
+    current version: 24.11.3
+    latest version: 25.5.1
+
+Please update conda by running
+
+    $ conda update -n base -c defaults conda
+
+
+
+## Package Plan ##
+
+  environment location: C:\Users\unish\.conda\envs\deepfake-env8
+
+  added / updated specs:
+    - python=3.9
+
+
+The following NEW packages will be INSTALLED:
+
+  bzip2              pkgs/main/win-64::bzip2-1.0.8-h2bbff1b_6 
+  ca-certificates    pkgs/main/win-64::ca-certificates-2025.2.25-haa95532_0 
+  expat              pkgs/main/win-64::expat-2.7.1-h8ddb27b_0 
+  libffi             pkgs/main/win-64::libffi-3.4.4-hd77b12b_1 
+  openssl            pkgs/main/win-64::openssl-3.0.16-h3f729d1_0 
+  pip                pkgs/main/noarch::pip-25.1-pyhc872135_2 
+  python             pkgs/main/win-64::python-3.9.23-h716150d_0 
+  setuptools         pkgs/main/win-64::setuptools-78.1.1-py39haa95532_0 
+  sqlite             pkgs/main/win-64::sqlite-3.45.3-h2bbff1b_0 
+  tk                 pkgs/main/win-64::tk-8.6.14-h5e9d12e_1 
+  tzdata             pkgs/main/noarch::tzdata-2025b-h04d1e81_0 
+  vc                 pkgs/main/win-64::vc-14.42-haa95532_5 
+  vs2015_runtime     pkgs/main/win-64::vs2015_runtime-14.42.34433-hbfb602d_5 
+  wheel              pkgs/main/win-64::wheel-0.45.1-py39haa95532_0 
+  xz                 pkgs/main/win-64::xz-5.6.4-h4754444_1 
+  zlib               pkgs/main/win-64::zlib-1.2.13-h8cc25b3_1 
+
+
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: - done
+Verifying transaction: | / - \ | / - \ | / - done
+Executing transaction: | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / done
+#
+# To activate this environment, use
+#
+#     $ conda activate deepfake-env8
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
+
+[STEP 2] Installing PyTorch, torchvision, torchaudio with CUDA 12.1 
+Channels:
+ - pytorch
+ - nvidia
+ - defaults
+Platform: win-64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+
+==> WARNING: A newer version of conda exists. <==
+    current version: 24.11.3
+    latest version: 25.5.1
+
+Please update conda by running
+
+    $ conda update -n base -c defaults conda
+
+
+
+## Package Plan ##
+
+  environment location: C:\Users\unish\.conda\envs\deepfake-env8
+
+  added / updated specs:
+    - pytorch
+    - pytorch-cuda=12.1
+    - torchaudio
+    - torchvision
+
+
+The following NEW packages will be INSTALLED:
+
+  blas               pkgs/main/win-64::blas-1.0-mkl 
+  brotli-python      pkgs/main/win-64::brotli-python-1.0.9-py39h5da7b33_9 
+  certifi            pkgs/main/win-64::certifi-2025.4.26-py39haa95532_0 
+  charset-normalizer pkgs/main/noarch::charset-normalizer-3.3.2-pyhd3eb1b0_0 
+  cuda-cccl          nvidia/win-64::cuda-cccl-12.9.27-0 
+  cuda-cccl_win-64   nvidia/win-64::cuda-cccl_win-64-12.9.27-0 
+  cuda-cudart        nvidia/win-64::cuda-cudart-12.1.105-0 
+  cuda-cudart-dev    nvidia/win-64::cuda-cudart-dev-12.1.105-0 
+  cuda-cupti         nvidia/win-64::cuda-cupti-12.1.105-0 
+  cuda-libraries     nvidia/win-64::cuda-libraries-12.1.0-0 
+  cuda-libraries-dev nvidia/win-64::cuda-libraries-dev-12.1.0-0 
+  cuda-nvrtc         nvidia/win-64::cuda-nvrtc-12.1.105-0 
+  cuda-nvrtc-dev     nvidia/win-64::cuda-nvrtc-dev-12.1.105-0 
+  cuda-nvtx          nvidia/win-64::cuda-nvtx-12.1.105-0 
+  cuda-opencl        nvidia/win-64::cuda-opencl-12.9.19-0 
+  cuda-opencl-dev    nvidia/win-64::cuda-opencl-dev-12.9.19-0 
+  cuda-profiler-api  nvidia/win-64::cuda-profiler-api-12.9.79-0 
+  cuda-runtime       nvidia/win-64::cuda-runtime-12.1.0-0 
+  cuda-version       nvidia/noarch::cuda-version-12.9-3 
+  filelock           pkgs/main/win-64::filelock-3.17.0-py39haa95532_0 
+  freeglut           pkgs/main/win-64::freeglut-3.4.0-h8a1e904_1 
+  freetype           pkgs/main/win-64::freetype-2.13.3-h0620614_0 
+  giflib             pkgs/main/win-64::giflib-5.2.2-h7edc060_0 
+  gmp                pkgs/main/win-64::gmp-6.3.0-h537511b_0 
+  gmpy2              pkgs/main/win-64::gmpy2-2.2.1-py39h827c3e9_0 
+  idna               pkgs/main/win-64::idna-3.7-py39haa95532_0 
+  intel-openmp       pkgs/main/win-64::intel-openmp-2023.1.0-h59b6b97_46320 
+  jinja2             pkgs/main/win-64::jinja2-3.1.6-py39haa95532_0 
+  jpeg               pkgs/main/win-64::jpeg-9e-h827c3e9_3 
+  khronos-opencl-ic~ pkgs/main/win-64::khronos-opencl-icd-loader-2024.05.08-h8cc25b3_0 
+  lcms2              pkgs/main/win-64::lcms2-2.16-h62be587_1 
+  lerc               pkgs/main/win-64::lerc-4.0.0-h5da7b33_0 
+  libcublas          nvidia/win-64::libcublas-12.1.0.26-0 
+  libcublas-dev      nvidia/win-64::libcublas-dev-12.1.0.26-0 
+  libcufft           nvidia/win-64::libcufft-11.0.2.4-0 
+  libcufft-dev       nvidia/win-64::libcufft-dev-11.0.2.4-0 
+  libcurand          nvidia/win-64::libcurand-10.3.10.19-0 
+  libcurand-dev      nvidia/win-64::libcurand-dev-10.3.10.19-0 
+  libcusolver        nvidia/win-64::libcusolver-11.4.4.55-0 
+  libcusolver-dev    nvidia/win-64::libcusolver-dev-11.4.4.55-0 
+  libcusparse        nvidia/win-64::libcusparse-12.0.2.55-0 
+  libcusparse-dev    nvidia/win-64::libcusparse-dev-12.0.2.55-0 
+  libdeflate         pkgs/main/win-64::libdeflate-1.22-h5bf469e_0 
+  libjpeg-turbo      pkgs/main/win-64::libjpeg-turbo-2.0.0-h196d8e1_0 
+  libnpp             nvidia/win-64::libnpp-12.0.2.50-0 
+  libnpp-dev         nvidia/win-64::libnpp-dev-12.0.2.50-0 
+  libnvjitlink       nvidia/win-64::libnvjitlink-12.1.105-0 
+  libnvjitlink-dev   nvidia/win-64::libnvjitlink-dev-12.1.105-0 
+  libnvjpeg          nvidia/win-64::libnvjpeg-12.1.1.14-0 
+  libnvjpeg-dev      nvidia/win-64::libnvjpeg-dev-12.1.1.14-0 
+  libpng             pkgs/main/win-64::libpng-1.6.39-h8cc25b3_0 
+  libtiff            pkgs/main/win-64::libtiff-4.7.0-h404307b_0 
+  libuv              pkgs/main/win-64::libuv-1.48.0-h827c3e9_0 
+  libwebp            pkgs/main/win-64::libwebp-1.3.2-h18467be_1 
+  libwebp-base       pkgs/main/win-64::libwebp-base-1.3.2-h3d04722_1 
+  lz4-c              pkgs/main/win-64::lz4-c-1.9.4-h2bbff1b_1 
+  markupsafe         pkgs/main/win-64::markupsafe-3.0.2-py39h827c3e9_0 
+  mkl                pkgs/main/win-64::mkl-2023.1.0-h6b88ed4_46358 
+  mkl-service        pkgs/main/win-64::mkl-service-2.4.0-py39h827c3e9_2 
+  mkl_fft            pkgs/main/win-64::mkl_fft-1.3.11-py39h827c3e9_0 
+  mkl_random         pkgs/main/win-64::mkl_random-1.2.8-py39hc64d2fc_0 
+  mpc                pkgs/main/win-64::mpc-1.3.1-h827c3e9_0 
+  mpfr               pkgs/main/win-64::mpfr-4.2.1-h56c3642_0 
+  mpmath             pkgs/main/win-64::mpmath-1.3.0-py39haa95532_0 
+  networkx           pkgs/main/win-64::networkx-3.2.1-py39haa95532_0 
+  numpy              pkgs/main/win-64::numpy-2.0.1-py39h055cbcc_1 
+  numpy-base         pkgs/main/win-64::numpy-base-2.0.1-py39h65a83cf_1 
+  openjpeg           pkgs/main/win-64::openjpeg-2.5.2-h9b5d1b5_1 
+  pillow             pkgs/main/win-64::pillow-11.1.0-py39hea0d53e_1 
+  pysocks            pkgs/main/win-64::pysocks-1.7.1-py39haa95532_0 
+  pytorch            pytorch/win-64::pytorch-2.5.1-py3.9_cuda12.1_cudnn9_0 
+  pytorch-cuda       pytorch/win-64::pytorch-cuda-12.1-hde6ce7c_6 
+  pytorch-mutex      pytorch/noarch::pytorch-mutex-1.0-cuda 
+  pyyaml             pkgs/main/win-64::pyyaml-6.0.2-py39h827c3e9_0 
+  requests           pkgs/main/win-64::requests-2.32.3-py39haa95532_1 
+  sympy              pkgs/main/win-64::sympy-1.13.3-py39haa95532_1 
+  tbb                pkgs/main/win-64::tbb-2021.8.0-h59b6b97_0 
+  torchaudio         pytorch/win-64::torchaudio-2.5.1-py39_cu121 
+  torchvision        pytorch/win-64::torchvision-0.20.1-py39_cu121 
+  typing_extensions  pkgs/main/win-64::typing_extensions-4.12.2-py39haa95532_0 
+  urllib3            pkgs/main/win-64::urllib3-2.3.0-py39haa95532_0 
+  win_inet_pton      pkgs/main/win-64::win_inet_pton-1.1.0-py39haa95532_0 
+  yaml               pkgs/main/win-64::yaml-0.2.5-he774522_0 
+  zstd               pkgs/main/win-64::zstd-1.5.6-h8880b57_0 
+
+
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: - \ | / done
+Verifying transaction: \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / done
+Executing transaction: \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | done
+[STEP 3] Installing OpenCV 
+Channels:
+ - conda-forge
+ - defaults
+ - nvidia
+ - pytorch
+Platform: win-64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+
+==> WARNING: A newer version of conda exists. <==
+    current version: 24.11.3
+    latest version: 25.5.1
+
+Please update conda by running
+
+    $ conda update -n base -c defaults conda
+
+
+
+## Package Plan ##
+
+  environment location: C:\Users\unish\.conda\envs\deepfake-env8
+
+  added / updated specs:
+    - opencv
+
+
+The following NEW packages will be INSTALLED:
+
+  aom                conda-forge/win-64::aom-3.6.1-h63175ca_0 
+  cairo              conda-forge/win-64::cairo-1.16.0-hd694305_1014 
+  dav1d              conda-forge/win-64::dav1d-1.2.1-hcfcfb64_0 
+  ffmpeg             conda-forge/win-64::ffmpeg-5.1.2-gpl_h8bb4bc8_112 
+  font-ttf-dejavu-s~ conda-forge/noarch::font-ttf-dejavu-sans-mono-2.37-hab24e00_0 
+  font-ttf-inconsol~ conda-forge/noarch::font-ttf-inconsolata-3.000-h77eed37_0 
+  font-ttf-source-c~ conda-forge/noarch::font-ttf-source-code-pro-2.038-h77eed37_0 
+  font-ttf-ubuntu    conda-forge/noarch::font-ttf-ubuntu-0.83-h77eed37_3 
+  fontconfig         conda-forge/win-64::fontconfig-2.14.2-hbde0cde_0 
+  fonts-conda-ecosy~ conda-forge/noarch::fonts-conda-ecosystem-1-0 
+  fonts-conda-forge  conda-forge/noarch::fonts-conda-forge-1-0 
+  gettext            conda-forge/win-64::gettext-0.22.5-h5728263_3 
+  gettext-tools      conda-forge/win-64::gettext-tools-0.22.5-h5a7288d_3 
+  glib               conda-forge/win-64::glib-2.80.2-h0df6a38_0 
+  glib-tools         conda-forge/win-64::glib-tools-2.80.2-h2f9d560_0 
+  graphite2          conda-forge/win-64::graphite2-1.3.13-h63175ca_1003 
+  gst-plugins-base   conda-forge/win-64::gst-plugins-base-1.22.9-h001b923_1 
+  gstreamer          conda-forge/win-64::gstreamer-1.22.9-hb4038d2_1 
+  harfbuzz           conda-forge/win-64::harfbuzz-6.0.0-he256f1b_0 
+  icu                conda-forge/win-64::icu-70.1-h0e60522_0 
+  jasper             conda-forge/win-64::jasper-2.0.33-hc2e4405_1 
+  krb5               conda-forge/win-64::krb5-1.20.1-heb0366b_0 
+  libasprintf        conda-forge/win-64::libasprintf-0.22.5-h5728263_3 
+  libasprintf-devel  conda-forge/win-64::libasprintf-devel-0.22.5-h5728263_3 
+  libblas            conda-forge/win-64::libblas-3.9.0-1_h8933c1f_netlib 
+  libcblas           conda-forge/win-64::libcblas-3.9.0-12_hb3dda5d_netlib 
+  libclang           conda-forge/win-64::libclang-15.0.7-default_h3a3e6c3_5 
+  libclang13         conda-forge/win-64::libclang13-15.0.7-default_hf64faad_5 
+  libgettextpo       conda-forge/win-64::libgettextpo-0.22.5-h5728263_3 
+  libgettextpo-devel conda-forge/win-64::libgettextpo-devel-0.22.5-h5728263_3 
+  libglib            conda-forge/win-64::libglib-2.80.2-h0df6a38_0 
+  libiconv           conda-forge/win-64::libiconv-1.18-h135ad9c_1 
+  libintl            conda-forge/win-64::libintl-0.22.5-h5728263_3 
+  libintl-devel      conda-forge/win-64::libintl-devel-0.22.5-h5728263_3 
+  liblapack          conda-forge/win-64::liblapack-3.9.0-12_h13b7882_netlib 
+  liblapacke         conda-forge/win-64::liblapacke-3.9.0-12_h1360930_netlib 
+  libogg             conda-forge/win-64::libogg-1.3.5-h2466b09_1 
+  libopencv          conda-forge/win-64::libopencv-4.7.0-py39ha9d37a1_1 
+  libopus            conda-forge/win-64::libopus-1.5.2-h2466b09_0 
+  libprotobuf        conda-forge/win-64::libprotobuf-3.21.12-h12be248_2 
+  libsqlite          conda-forge/win-64::libsqlite-3.50.1-h67fdade_0 
+  libvorbis          conda-forge/win-64::libvorbis-1.3.7-h0e60522_0 
+  libxcb             conda-forge/win-64::libxcb-1.13-hcd874cb_1004 
+  libxml2            conda-forge/win-64::libxml2-2.12.7-h283a6d9_1 
+  libzlib            conda-forge/win-64::libzlib-1.2.13-h2466b09_6 
+  m2w64-gcc-libgfor~ conda-forge/win-64::m2w64-gcc-libgfortran-5.3.0-6 
+  m2w64-gcc-libs     conda-forge/win-64::m2w64-gcc-libs-5.3.0-7 
+  m2w64-gcc-libs-co~ conda-forge/win-64::m2w64-gcc-libs-core-5.3.0-7 
+  m2w64-gmp          conda-forge/win-64::m2w64-gmp-6.1.0-2 
+  m2w64-libwinpthre~ conda-forge/win-64::m2w64-libwinpthread-git-5.0.0.4634.697f757-2 
+  msys2-conda-epoch  conda-forge/win-64::msys2-conda-epoch-20160418-1 
+  opencv             conda-forge/win-64::opencv-4.7.0-py39hcbf5309_1 
+  openh264           conda-forge/win-64::openh264-2.3.1-h63175ca_2 
+  pcre2              conda-forge/win-64::pcre2-10.43-h17e33f8_0 
+  pixman             conda-forge/win-64::pixman-0.46.2-had0cd8c_0 
+  pthread-stubs      conda-forge/win-64::pthread-stubs-0.4-hcd874cb_1001 
+  py-opencv          conda-forge/win-64::py-opencv-4.7.0-py39h00e5391_1 
+  python_abi         conda-forge/win-64::python_abi-3.9-2_cp39 
+  qt-main            conda-forge/win-64::qt-main-5.15.8-h720456b_6 
+  svt-av1            conda-forge/win-64::svt-av1-1.4.1-h63175ca_0 
+  ucrt               conda-forge/win-64::ucrt-10.0.22621.0-h57928b3_1 
+  vc14_runtime       conda-forge/win-64::vc14_runtime-14.42.34438-hfd919c2_26 
+  x264               conda-forge/win-64::x264-1!164.3095-h8ffe710_2 
+  x265               conda-forge/win-64::x265-3.5-h2d74725_3 
+  xorg-libxau        conda-forge/win-64::xorg-libxau-1.0.11-hcd874cb_0 
+  xorg-libxdmcp      conda-forge/win-64::xorg-libxdmcp-1.1.3-hcd874cb_0 
+
+The following packages will be UPDATED:
+
+  ca-certificates    pkgs/main/win-64::ca-certificates-202~ --> conda-forge/noarch::ca-certificates-2025.4.26-h4c7d964_0 
+  openssl              pkgs/main::openssl-3.0.16-h3f729d1_0 --> conda-forge::openssl-3.5.0-ha4e3fda_1 
+  vs2015_runtime     pkgs/main::vs2015_runtime-14.42.34433~ --> conda-forge::vs2015_runtime-14.42.34438-h7142326_26 
+  zlib                    pkgs/main::zlib-1.2.13-h8cc25b3_1 --> conda-forge::zlib-1.2.13-h2466b09_6 
+
+The following packages will be SUPERSEDED by a higher-priority channel:
+
+  certifi            pkgs/main/win-64::certifi-2025.4.26-p~ --> conda-forge/noarch::certifi-2025.4.26-pyhd8ed1ab_0 
+  lcms2                    pkgs/main::lcms2-2.16-h62be587_1 --> conda-forge::lcms2-2.15-ha5c8aab_0 
+  libwebp               pkgs/main::libwebp-1.3.2-h18467be_1 --> conda-forge::libwebp-1.3.2-hcfcfb64_1 
+  numpy               pkgs/main::numpy-2.0.1-py39h055cbcc_1 --> conda-forge::numpy-1.20.3-py39h6635163_0 
+  openjpeg             pkgs/main::openjpeg-2.5.2-h9b5d1b5_1 --> conda-forge::openjpeg-2.5.0-ha2aaf27_2 
+  pillow             pkgs/main::pillow-11.1.0-py39hea0d53e~ --> conda-forge::pillow-9.4.0-py39hcebd2be_1 
+
+The following packages will be DOWNGRADED:
+
+  libtiff                                  4.7.0-h404307b_0 --> 4.5.1-h44ae7cf_1 
+  numpy-base                           2.0.1-py39h65a83cf_1 --> 2.0.0-py39hb9380bd_0 
+
+
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: - \ | / - done
+Verifying transaction: | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - done
+Executing transaction: | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | done
+[STEP 4] Installing TensorFlow 
+Collecting tensorflow==2.10
+  Using cached tensorflow-2.10.0-cp39-cp39-win_amd64.whl.metadata (3.1 kB)
+Collecting absl-py>=1.0.0 (from tensorflow==2.10)
+  Using cached absl_py-2.3.0-py3-none-any.whl.metadata (2.4 kB)
+Collecting astunparse>=1.6.0 (from tensorflow==2.10)
+  Using cached astunparse-1.6.3-py2.py3-none-any.whl.metadata (4.4 kB)
+Collecting flatbuffers>=2.0 (from tensorflow==2.10)
+  Using cached flatbuffers-25.2.10-py2.py3-none-any.whl.metadata (875 bytes)
+Collecting gast<=0.4.0,>=0.2.1 (from tensorflow==2.10)
+  Using cached gast-0.4.0-py3-none-any.whl.metadata (1.1 kB)
+Collecting google-pasta>=0.1.1 (from tensorflow==2.10)
+  Using cached google_pasta-0.2.0-py3-none-any.whl.metadata (814 bytes)
+Collecting h5py>=2.9.0 (from tensorflow==2.10)
+  Using cached h5py-3.14.0-cp39-cp39-win_amd64.whl.metadata (2.7 kB)
+Collecting keras-preprocessing>=1.1.1 (from tensorflow==2.10)
+  Using cached Keras_Preprocessing-1.1.2-py2.py3-none-any.whl.metadata (1.9 kB)
+Collecting libclang>=13.0.0 (from tensorflow==2.10)
+  Using cached libclang-18.1.1-py2.py3-none-win_amd64.whl.metadata (5.3 kB)
+Requirement already satisfied: numpy>=1.20 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow==2.10) (1.20.3)
+Collecting opt-einsum>=2.3.2 (from tensorflow==2.10)
+  Using cached opt_einsum-3.4.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting packaging (from tensorflow==2.10)
+  Using cached packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting protobuf<3.20,>=3.9.2 (from tensorflow==2.10)
+  Using cached protobuf-3.19.6-cp39-cp39-win_amd64.whl.metadata (807 bytes)
+Requirement already satisfied: setuptools in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow==2.10) (78.1.1)
+Collecting six>=1.12.0 (from tensorflow==2.10)
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting termcolor>=1.1.0 (from tensorflow==2.10)
+  Using cached termcolor-3.1.0-py3-none-any.whl.metadata (6.4 kB)
+Requirement already satisfied: typing-extensions>=3.6.6 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow==2.10) (4.12.2)
+Collecting wrapt>=1.11.0 (from tensorflow==2.10)
+  Using cached wrapt-1.17.2-cp39-cp39-win_amd64.whl.metadata (6.5 kB)
+Collecting tensorflow-io-gcs-filesystem>=0.23.1 (from tensorflow==2.10)
+  Using cached tensorflow_io_gcs_filesystem-0.31.0-cp39-cp39-win_amd64.whl.metadata (14 kB)
+Collecting grpcio<2.0,>=1.24.3 (from tensorflow==2.10)
+  Using cached grpcio-1.73.0-cp39-cp39-win_amd64.whl.metadata (4.0 kB)
+Collecting tensorboard<2.11,>=2.10 (from tensorflow==2.10)
+  Using cached tensorboard-2.10.1-py3-none-any.whl.metadata (1.9 kB)
+Collecting tensorflow-estimator<2.11,>=2.10.0 (from tensorflow==2.10)
+  Using cached tensorflow_estimator-2.10.0-py2.py3-none-any.whl.metadata (1.3 kB)
+Collecting keras<2.11,>=2.10.0 (from tensorflow==2.10)
+  Using cached keras-2.10.0-py2.py3-none-any.whl.metadata (1.3 kB)
+Collecting google-auth<3,>=1.6.3 (from tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached google_auth-2.40.3-py2.py3-none-any.whl.metadata (6.2 kB)
+Collecting google-auth-oauthlib<0.5,>=0.4.1 (from tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached google_auth_oauthlib-0.4.6-py2.py3-none-any.whl.metadata (2.7 kB)
+Collecting markdown>=2.6.8 (from tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached markdown-3.8-py3-none-any.whl.metadata (5.1 kB)
+Requirement already satisfied: requests<3,>=2.21.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorboard<2.11,>=2.10->tensorflow==2.10) (2.32.3)
+Collecting tensorboard-data-server<0.7.0,>=0.6.0 (from tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached tensorboard_data_server-0.6.1-py3-none-any.whl.metadata (1.1 kB)
+Collecting tensorboard-plugin-wit>=1.6.0 (from tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached tensorboard_plugin_wit-1.8.1-py3-none-any.whl.metadata (873 bytes)
+Collecting werkzeug>=1.0.1 (from tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached werkzeug-3.1.3-py3-none-any.whl.metadata (3.7 kB)
+Requirement already satisfied: wheel>=0.26 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorboard<2.11,>=2.10->tensorflow==2.10) (0.45.1)
+Collecting cachetools<6.0,>=2.0.0 (from google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached cachetools-5.5.2-py3-none-any.whl.metadata (5.4 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting rsa<5,>=3.1.4 (from google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+Collecting requests-oauthlib>=0.7.0 (from google-auth-oauthlib<0.5,>=0.4.1->tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached requests_oauthlib-2.0.0-py2.py3-none-any.whl.metadata (11 kB)
+Requirement already satisfied: charset-normalizer<4,>=2 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests<3,>=2.21.0->tensorboard<2.11,>=2.10->tensorflow==2.10) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests<3,>=2.21.0->tensorboard<2.11,>=2.10->tensorflow==2.10) (3.7)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests<3,>=2.21.0->tensorboard<2.11,>=2.10->tensorflow==2.10) (2.3.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests<3,>=2.21.0->tensorboard<2.11,>=2.10->tensorflow==2.10) (2025.4.26)
+Collecting pyasn1>=0.1.3 (from rsa<5,>=3.1.4->google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached pyasn1-0.6.1-py3-none-any.whl.metadata (8.4 kB)
+Collecting importlib-metadata>=4.4 (from markdown>=2.6.8->tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached importlib_metadata-8.7.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting zipp>=3.20 (from importlib-metadata>=4.4->markdown>=2.6.8->tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
+Collecting oauthlib>=3.0.0 (from requests-oauthlib>=0.7.0->google-auth-oauthlib<0.5,>=0.4.1->tensorboard<2.11,>=2.10->tensorflow==2.10)
+  Using cached oauthlib-3.2.2-py3-none-any.whl.metadata (7.5 kB)
+Requirement already satisfied: MarkupSafe>=2.1.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from werkzeug>=1.0.1->tensorboard<2.11,>=2.10->tensorflow==2.10) (3.0.2)
+Using cached tensorflow-2.10.0-cp39-cp39-win_amd64.whl (455.9 MB)
+Using cached gast-0.4.0-py3-none-any.whl (9.8 kB)
+Using cached grpcio-1.73.0-cp39-cp39-win_amd64.whl (4.3 MB)
+Using cached keras-2.10.0-py2.py3-none-any.whl (1.7 MB)
+Using cached protobuf-3.19.6-cp39-cp39-win_amd64.whl (895 kB)
+Using cached tensorboard-2.10.1-py3-none-any.whl (5.9 MB)
+Using cached google_auth-2.40.3-py2.py3-none-any.whl (216 kB)
+Using cached cachetools-5.5.2-py3-none-any.whl (10 kB)
+Using cached google_auth_oauthlib-0.4.6-py2.py3-none-any.whl (18 kB)
+Using cached rsa-4.9.1-py3-none-any.whl (34 kB)
+Using cached tensorboard_data_server-0.6.1-py3-none-any.whl (2.4 kB)
+Using cached tensorflow_estimator-2.10.0-py2.py3-none-any.whl (438 kB)
+Using cached absl_py-2.3.0-py3-none-any.whl (135 kB)
+Using cached astunparse-1.6.3-py2.py3-none-any.whl (12 kB)
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Using cached flatbuffers-25.2.10-py2.py3-none-any.whl (30 kB)
+Using cached google_pasta-0.2.0-py3-none-any.whl (57 kB)
+Using cached h5py-3.14.0-cp39-cp39-win_amd64.whl (2.9 MB)
+Using cached Keras_Preprocessing-1.1.2-py2.py3-none-any.whl (42 kB)
+Using cached libclang-18.1.1-py2.py3-none-win_amd64.whl (26.4 MB)
+Using cached markdown-3.8-py3-none-any.whl (106 kB)
+Using cached importlib_metadata-8.7.0-py3-none-any.whl (27 kB)
+Using cached opt_einsum-3.4.0-py3-none-any.whl (71 kB)
+Using cached pyasn1-0.6.1-py3-none-any.whl (83 kB)
+Using cached pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+Using cached requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
+Using cached oauthlib-3.2.2-py3-none-any.whl (151 kB)
+Using cached tensorboard_plugin_wit-1.8.1-py3-none-any.whl (781 kB)
+Using cached tensorflow_io_gcs_filesystem-0.31.0-cp39-cp39-win_amd64.whl (1.5 MB)
+Using cached termcolor-3.1.0-py3-none-any.whl (7.7 kB)
+Using cached werkzeug-3.1.3-py3-none-any.whl (224 kB)
+Using cached wrapt-1.17.2-cp39-cp39-win_amd64.whl (38 kB)
+Using cached zipp-3.23.0-py3-none-any.whl (10 kB)
+Using cached packaging-25.0-py3-none-any.whl (66 kB)
+Installing collected packages: tensorboard-plugin-wit, libclang, keras, flatbuffers, zipp, wrapt, werkzeug, termcolor, tensorflow-io-gcs-filesystem, tensorflow-estimator, tensorboard-data-server, six, pyasn1, protobuf, packaging, opt-einsum, oauthlib, h5py, grpcio, gast, cachetools, absl-py, rsa, requests-oauthlib, pyasn1-modules, keras-preprocessing, importlib-metadata, google-pasta, astunparse, markdown, google-auth, google-auth-oauthlib, tensorboard, tensorflow
+
+Successfully installed absl-py-2.3.0 astunparse-1.6.3 cachetools-5.5.2 flatbuffers-25.2.10 gast-0.4.0 google-auth-2.40.3 google-auth-oauthlib-0.4.6 google-pasta-0.2.0 grpcio-1.73.0 h5py-3.14.0 importlib-metadata-8.7.0 keras-2.10.0 keras-preprocessing-1.1.2 libclang-18.1.1 markdown-3.8 oauthlib-3.2.2 opt-einsum-3.4.0 packaging-25.0 protobuf-3.19.6 pyasn1-0.6.1 pyasn1-modules-0.4.2 requests-oauthlib-2.0.0 rsa-4.9.1 six-1.17.0 tensorboard-2.10.1 tensorboard-data-server-0.6.1 tensorboard-plugin-wit-1.8.1 tensorflow-2.10.0 tensorflow-estimator-2.10.0 tensorflow-io-gcs-filesystem-0.31.0 termcolor-3.1.0 werkzeug-3.1.3 wrapt-1.17.2 zipp-3.23.0
+[STEP 5] Installing DeepFace and face detection libs 
+Collecting deepface
+  Using cached deepface-0.0.93-py3-none-any.whl.metadata (30 kB)
+Using cached deepface-0.0.93-py3-none-any.whl (108 kB)
+Installing collected packages: deepface
+Successfully installed deepface-0.0.93
+Collecting retina-face
+  Using cached retina_face-0.0.17-py3-none-any.whl.metadata (10 kB)
+Requirement already satisfied: keras in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (2.10.0)
+Collecting gdown
+  Using cached gdown-5.2.0-py3-none-any.whl.metadata (5.8 kB)
+Collecting mtcnn
+  Using cached mtcnn-0.1.1-py3-none-any.whl.metadata (5.8 kB)
+Requirement already satisfied: numpy>=1.14.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from retina-face) (1.20.3)
+Requirement already satisfied: Pillow>=5.2.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from retina-face) (9.4.0)
+Requirement already satisfied: opencv-python>=3.4.4 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from retina-face) (4.7.0)
+Requirement already satisfied: tensorflow>=1.9.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from retina-face) (2.10.0)
+Collecting beautifulsoup4 (from gdown)
+  Using cached beautifulsoup4-4.13.4-py3-none-any.whl.metadata (3.8 kB)
+Requirement already satisfied: filelock in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from gdown) (3.17.0)
+Requirement already satisfied: requests[socks] in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from gdown) (2.32.3)
+Collecting tqdm (from gdown)
+  Using cached tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+Requirement already satisfied: absl-py>=1.0.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (2.3.0)
+Requirement already satisfied: astunparse>=1.6.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (1.6.3)
+Requirement already satisfied: flatbuffers>=2.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (25.2.10)
+Requirement already satisfied: gast<=0.4.0,>=0.2.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (0.4.0)
+Requirement already satisfied: google-pasta>=0.1.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (0.2.0)
+Requirement already satisfied: h5py>=2.9.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (3.14.0)
+Requirement already satisfied: keras-preprocessing>=1.1.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (1.1.2)
+Requirement already satisfied: libclang>=13.0.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (18.1.1)
+Requirement already satisfied: opt-einsum>=2.3.2 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (3.4.0)
+Requirement already satisfied: packaging in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (25.0)
+Requirement already satisfied: protobuf<3.20,>=3.9.2 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (3.19.6)
+Requirement already satisfied: setuptools in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (78.1.1)
+Requirement already satisfied: six>=1.12.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (1.17.0)
+Requirement already satisfied: termcolor>=1.1.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (3.1.0)
+Requirement already satisfied: typing-extensions>=3.6.6 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (4.12.2)
+Requirement already satisfied: wrapt>=1.11.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (1.17.2)
+Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (0.31.0)
+Requirement already satisfied: grpcio<2.0,>=1.24.3 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (1.73.0)
+Requirement already satisfied: tensorboard<2.11,>=2.10 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (2.10.1)
+Requirement already satisfied: tensorflow-estimator<2.11,>=2.10.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorflow>=1.9.0->retina-face) (2.10.0)
+Requirement already satisfied: google-auth<3,>=1.6.3 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (2.40.3)
+Requirement already satisfied: google-auth-oauthlib<0.5,>=0.4.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (0.4.6)
+Requirement already satisfied: markdown>=2.6.8 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (3.8)
+Requirement already satisfied: tensorboard-data-server<0.7.0,>=0.6.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (0.6.1)
+Requirement already satisfied: tensorboard-plugin-wit>=1.6.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (1.8.1)
+Requirement already satisfied: werkzeug>=1.0.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (3.1.3)
+Requirement already satisfied: wheel>=0.26 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (0.45.1)
+Requirement already satisfied: cachetools<6.0,>=2.0.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (5.5.2)
+Requirement already satisfied: pyasn1-modules>=0.2.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (0.4.2)
+Requirement already satisfied: rsa<5,>=3.1.4 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (4.9.1)
+Requirement already satisfied: requests-oauthlib>=0.7.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from google-auth-oauthlib<0.5,>=0.4.1->tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (2.0.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests[socks]->gdown) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests[socks]->gdown) (3.7)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests[socks]->gdown) (2.3.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests[socks]->gdown) (2025.4.26)
+Requirement already satisfied: pyasn1>=0.1.3 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from rsa<5,>=3.1.4->google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (0.6.1)
+Requirement already satisfied: importlib-metadata>=4.4 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from markdown>=2.6.8->tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (8.7.0)
+Requirement already satisfied: zipp>=3.20 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from importlib-metadata>=4.4->markdown>=2.6.8->tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (3.23.0)
+Requirement already satisfied: oauthlib>=3.0.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests-oauthlib>=0.7.0->google-auth-oauthlib<0.5,>=0.4.1->tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (3.2.2)
+Requirement already satisfied: MarkupSafe>=2.1.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from werkzeug>=1.0.1->tensorboard<2.11,>=2.10->tensorflow>=1.9.0->retina-face) (3.0.2)
+Collecting soupsieve>1.2 (from beautifulsoup4->gdown)
+  Using cached soupsieve-2.7-py3-none-any.whl.metadata (4.6 kB)
+Requirement already satisfied: PySocks!=1.5.7,>=1.5.6 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests[socks]->gdown) (1.7.1)
+Collecting colorama (from tqdm->gdown)
+  Using cached colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+Using cached retina_face-0.0.17-py3-none-any.whl (25 kB)
+Using cached gdown-5.2.0-py3-none-any.whl (18 kB)
+Using cached mtcnn-0.1.1-py3-none-any.whl (2.3 MB)
+Using cached beautifulsoup4-4.13.4-py3-none-any.whl (187 kB)
+Using cached soupsieve-2.7-py3-none-any.whl (36 kB)
+Using cached tqdm-4.67.1-py3-none-any.whl (78 kB)
+Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Installing collected packages: soupsieve, mtcnn, colorama, tqdm, beautifulsoup4, gdown, retina-face
+
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+deepface 0.0.93 requires fire>=0.4.0, which is not installed.
+deepface 0.0.93 requires Flask>=1.1.2, which is not installed.
+deepface 0.0.93 requires flask-cors>=4.0.1, which is not installed.
+deepface 0.0.93 requires gunicorn>=20.1.0, which is not installed.
+deepface 0.0.93 requires pandas>=0.23.4, which is not installed.
+Successfully installed beautifulsoup4-4.13.4 colorama-0.4.6 gdown-5.2.0 mtcnn-0.1.1 retina-face-0.0.17 soupsieve-2.7 tqdm-4.67.1
+[STEP 6] Installing InsightFace + ONNX + image libs 
+Collecting insightface
+  Using cached insightface-0.7.3-cp39-cp39-win_amd64.whl
+Installing collected packages: insightface
+Successfully installed insightface-0.7.3
+Collecting onnxruntime-gpu
+  Using cached onnxruntime_gpu-1.19.2-cp39-cp39-win_amd64.whl.metadata (4.7 kB)
+Using cached onnxruntime_gpu-1.19.2-cp39-cp39-win_amd64.whl (226.4 MB)
+Installing collected packages: onnxruntime-gpu
+Successfully installed onnxruntime-gpu-1.19.2
+Collecting onnx
+  Using cached onnx-1.18.0-cp39-cp39-win_amd64.whl.metadata (7.0 kB)
+Collecting scikit-image
+  Using cached scikit_image-0.24.0-cp39-cp39-win_amd64.whl.metadata (14 kB)
+Collecting albumentations
+  Using cached albumentations-2.0.8-py3-none-any.whl.metadata (43 kB)
+Collecting numpy>=1.22 (from onnx)
+  Using cached numpy-2.0.2-cp39-cp39-win_amd64.whl.metadata (59 kB)
+Collecting protobuf>=4.25.1 (from onnx)
+  Using cached protobuf-6.31.1-cp39-cp39-win_amd64.whl.metadata (593 bytes)
+Requirement already satisfied: typing_extensions>=4.7.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from onnx) (4.12.2)
+Collecting scipy>=1.9 (from scikit-image)
+  Using cached scipy-1.13.1-cp39-cp39-win_amd64.whl.metadata (60 kB)
+Requirement already satisfied: networkx>=2.8 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from scikit-image) (3.2.1)
+Requirement already satisfied: pillow>=9.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from scikit-image) (9.4.0)
+Collecting imageio>=2.33 (from scikit-image)
+  Using cached imageio-2.37.0-py3-none-any.whl.metadata (5.2 kB)
+Collecting tifffile>=2022.8.12 (from scikit-image)
+  Using cached tifffile-2024.8.30-py3-none-any.whl.metadata (31 kB)
+Requirement already satisfied: packaging>=21 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from scikit-image) (25.0)
+Collecting lazy-loader>=0.4 (from scikit-image)
+  Using cached lazy_loader-0.4-py3-none-any.whl.metadata (7.6 kB)
+Requirement already satisfied: PyYAML in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from albumentations) (6.0.2)
+Collecting pydantic>=2.9.2 (from albumentations)
+  Using cached pydantic-2.11.5-py3-none-any.whl.metadata (67 kB)
+Collecting albucore==0.0.24 (from albumentations)
+  Using cached albucore-0.0.24-py3-none-any.whl.metadata (5.3 kB)
+Collecting eval-type-backport (from albumentations)
+  Using cached eval_type_backport-0.2.2-py3-none-any.whl.metadata (2.2 kB)
+Collecting opencv-python-headless>=4.9.0.80 (from albumentations)
+  Using cached opencv_python_headless-4.11.0.86-cp37-abi3-win_amd64.whl.metadata (20 kB)
+Collecting stringzilla>=3.10.4 (from albucore==0.0.24->albumentations)
+  Using cached stringzilla-3.12.5-cp39-cp39-win_amd64.whl.metadata (81 kB)
+Collecting simsimd>=5.9.2 (from albucore==0.0.24->albumentations)
+  Using cached simsimd-6.4.9-cp39-cp39-win_amd64.whl.metadata (67 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2.9.2->albumentations)
+  Using cached annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.33.2 (from pydantic>=2.9.2->albumentations)
+  Using cached pydantic_core-2.33.2-cp39-cp39-win_amd64.whl.metadata (6.9 kB)
+Collecting typing-inspection>=0.4.0 (from pydantic>=2.9.2->albumentations)
+  Using cached typing_inspection-0.4.1-py3-none-any.whl.metadata (2.6 kB)
+Using cached onnx-1.18.0-cp39-cp39-win_amd64.whl (15.8 MB)
+Using cached scikit_image-0.24.0-cp39-cp39-win_amd64.whl (12.9 MB)
+Using cached albumentations-2.0.8-py3-none-any.whl (369 kB)
+Using cached albucore-0.0.24-py3-none-any.whl (15 kB)
+Using cached imageio-2.37.0-py3-none-any.whl (315 kB)
+Using cached lazy_loader-0.4-py3-none-any.whl (12 kB)
+Using cached numpy-2.0.2-cp39-cp39-win_amd64.whl (15.9 MB)
+Using cached opencv_python_headless-4.11.0.86-cp37-abi3-win_amd64.whl (39.4 MB)
+Using cached protobuf-6.31.1-cp39-cp39-win_amd64.whl (435 kB)
+Using cached pydantic-2.11.5-py3-none-any.whl (444 kB)
+Using cached pydantic_core-2.33.2-cp39-cp39-win_amd64.whl (2.0 MB)
+Using cached annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Using cached scipy-1.13.1-cp39-cp39-win_amd64.whl (46.2 MB)
+Using cached simsimd-6.4.9-cp39-cp39-win_amd64.whl (94 kB)
+Using cached stringzilla-3.12.5-cp39-cp39-win_amd64.whl (80 kB)
+Using cached tifffile-2024.8.30-py3-none-any.whl (227 kB)
+Using cached typing_inspection-0.4.1-py3-none-any.whl (14 kB)
+Using cached eval_type_backport-0.2.2-py3-none-any.whl (5.8 kB)
+Installing collected packages: stringzilla, simsimd, typing-inspection, pydantic-core, protobuf, numpy, lazy-loader, eval-type-backport, annotated-types, tifffile, scipy, pydantic, opencv-python-headless, onnx, imageio, scikit-image, albucore, albumentations
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 3.19.6
+    Uninstalling protobuf-3.19.6:
+      Successfully uninstalled protobuf-3.19.6
+  Attempting uninstall: numpy
+    Found existing installation: numpy 1.20.3
+    Uninstalling numpy-1.20.3:
+      Successfully uninstalled numpy-1.20.3
+
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+deepface 0.0.93 requires fire>=0.4.0, which is not installed.
+deepface 0.0.93 requires Flask>=1.1.2, which is not installed.
+deepface 0.0.93 requires flask-cors>=4.0.1, which is not installed.
+deepface 0.0.93 requires gunicorn>=20.1.0, which is not installed.
+deepface 0.0.93 requires pandas>=0.23.4, which is not installed.
+insightface 0.7.3 requires cython, which is not installed.
+insightface 0.7.3 requires easydict, which is not installed.
+insightface 0.7.3 requires matplotlib, which is not installed.
+insightface 0.7.3 requires prettytable, which is not installed.
+insightface 0.7.3 requires scikit-learn, which is not installed.
+onnxruntime-gpu 1.19.2 requires coloredlogs, which is not installed.
+tensorboard 2.10.1 requires protobuf<3.20,>=3.9.2, but you have protobuf 6.31.1 which is incompatible.
+tensorflow 2.10.0 requires protobuf<3.20,>=3.9.2, but you have protobuf 6.31.1 which is incompatible.
+Successfully installed albucore-0.0.24 albumentations-2.0.8 annotated-types-0.7.0 eval-type-backport-0.2.2 imageio-2.37.0 lazy-loader-0.4 numpy-2.0.0 onnx-1.18.0 opencv-python-headless-4.11.0.86 protobuf-6.31.1 pydantic-2.11.5 pydantic-core-2.33.2 scikit-image-0.24.0 scipy-1.13.1 simsimd-6.4.9 stringzilla-3.12.5 tifffile-2024.8.30 typing-inspection-0.4.1
+[STEP 7] Installing core packages 
+Collecting pandas
+  Using cached pandas-2.3.0-cp39-cp39-win_amd64.whl.metadata (19 kB)
+Collecting numpy==1.24.4
+  Using cached numpy-1.24.4-cp39-cp39-win_amd64.whl.metadata (5.6 kB)
+Collecting scikit-learn
+  Using cached scikit_learn-1.6.1-cp39-cp39-win_amd64.whl.metadata (15 kB)
+Collecting matplotlib
+  Using cached matplotlib-3.9.4-cp39-cp39-win_amd64.whl.metadata (11 kB)
+Collecting seaborn==0.12.2
+  Using cached seaborn-0.12.2-py3-none-any.whl.metadata (5.4 kB)
+Collecting scipy==1.10.1
+  Using cached scipy-1.10.1-cp39-cp39-win_amd64.whl.metadata (58 kB)
+Collecting ffmpeg-python
+  Using cached ffmpeg_python-0.2.0-py3-none-any.whl.metadata (1.7 kB)
+Collecting streamlit
+  Using cached streamlit-1.45.1-py3-none-any.whl.metadata (8.9 kB)
+Collecting pyngrok
+  Using cached pyngrok-7.2.11-py3-none-any.whl.metadata (9.4 kB)
+Collecting fpdf
+  Using cached fpdf-1.7.2-py2.py3-none-any.whl
+Requirement already satisfied: tqdm in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (4.67.1)
+Collecting python-dateutil>=2.8.2 (from pandas)
+  Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting pytz>=2020.1 (from pandas)
+  Using cached pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+Collecting tzdata>=2022.7 (from pandas)
+  Using cached tzdata-2025.2-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting joblib>=1.2.0 (from scikit-learn)
+  Using cached joblib-1.5.1-py3-none-any.whl.metadata (5.6 kB)
+Collecting threadpoolctl>=3.1.0 (from scikit-learn)
+  Using cached threadpoolctl-3.6.0-py3-none-any.whl.metadata (13 kB)
+Collecting contourpy>=1.0.1 (from matplotlib)
+  Using cached contourpy-1.3.0-cp39-cp39-win_amd64.whl.metadata (5.4 kB)
+Collecting cycler>=0.10 (from matplotlib)
+  Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.22.0 (from matplotlib)
+  Using cached fonttools-4.58.2-cp39-cp39-win_amd64.whl.metadata (108 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib)
+  Using cached kiwisolver-1.4.7-cp39-cp39-win_amd64.whl.metadata (6.4 kB)
+Requirement already satisfied: packaging>=20.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from matplotlib) (25.0)
+Requirement already satisfied: pillow>=8 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from matplotlib) (9.4.0)
+Collecting pyparsing>=2.3.1 (from matplotlib)
+  Using cached pyparsing-3.2.3-py3-none-any.whl.metadata (5.0 kB)
+Collecting importlib-resources>=3.2.0 (from matplotlib)
+  Using cached importlib_resources-6.5.2-py3-none-any.whl.metadata (3.9 kB)
+Collecting future (from ffmpeg-python)
+  Using cached future-1.0.0-py3-none-any.whl.metadata (4.0 kB)
+Collecting altair<6,>=4.0 (from streamlit)
+  Using cached altair-5.5.0-py3-none-any.whl.metadata (11 kB)
+Collecting blinker<2,>=1.5.0 (from streamlit)
+  Using cached blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+Requirement already satisfied: cachetools<6,>=4.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from streamlit) (5.5.2)
+Collecting click<9,>=7.0 (from streamlit)
+  Using cached click-8.1.8-py3-none-any.whl.metadata (2.3 kB)
+Collecting packaging>=20.0 (from matplotlib)
+  Using cached packaging-24.2-py3-none-any.whl.metadata (3.2 kB)
+Requirement already satisfied: protobuf<7,>=3.20 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from streamlit) (6.31.1)
+Collecting pyarrow>=7.0 (from streamlit)
+  Using cached pyarrow-20.0.0-cp39-cp39-win_amd64.whl.metadata (3.4 kB)
+Requirement already satisfied: requests<3,>=2.27 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from streamlit) (2.32.3)
+Collecting tenacity<10,>=8.1.0 (from streamlit)
+  Using cached tenacity-9.1.2-py3-none-any.whl.metadata (1.2 kB)
+Collecting toml<2,>=0.10.1 (from streamlit)
+  Using cached toml-0.10.2-py2.py3-none-any.whl.metadata (7.1 kB)
+Requirement already satisfied: typing-extensions<5,>=4.4.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from streamlit) (4.12.2)
+Collecting watchdog<7,>=2.1.5 (from streamlit)
+  Using cached watchdog-6.0.0-py3-none-win_amd64.whl.metadata (44 kB)
+Collecting gitpython!=3.1.19,<4,>=3.0.7 (from streamlit)
+  Using cached GitPython-3.1.44-py3-none-any.whl.metadata (13 kB)
+Collecting pydeck<1,>=0.8.0b4 (from streamlit)
+  Using cached pydeck-0.9.1-py2.py3-none-any.whl.metadata (4.1 kB)
+Collecting tornado<7,>=6.0.3 (from streamlit)
+  Using cached tornado-6.5.1-cp39-abi3-win_amd64.whl.metadata (2.9 kB)
+Requirement already satisfied: jinja2 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from altair<6,>=4.0->streamlit) (3.1.6)
+Collecting jsonschema>=3.0 (from altair<6,>=4.0->streamlit)
+  Using cached jsonschema-4.24.0-py3-none-any.whl.metadata (7.8 kB)
+Collecting narwhals>=1.14.2 (from altair<6,>=4.0->streamlit)
+  Using cached narwhals-1.42.0-py3-none-any.whl.metadata (11 kB)
+Requirement already satisfied: colorama in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from click<9,>=7.0->streamlit) (0.4.6)
+Collecting gitdb<5,>=4.0.1 (from gitpython!=3.1.19,<4,>=3.0.7->streamlit)
+  Using cached gitdb-4.0.12-py3-none-any.whl.metadata (1.2 kB)
+Collecting smmap<6,>=3.0.1 (from gitdb<5,>=4.0.1->gitpython!=3.1.19,<4,>=3.0.7->streamlit)
+  Using cached smmap-5.0.2-py3-none-any.whl.metadata (4.3 kB)
+Requirement already satisfied: charset-normalizer<4,>=2 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests<3,>=2.27->streamlit) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests<3,>=2.27->streamlit) (3.7)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests<3,>=2.27->streamlit) (2.3.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from requests<3,>=2.27->streamlit) (2025.4.26)
+Requirement already satisfied: PyYAML>=5.1 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from pyngrok) (6.0.2)
+Requirement already satisfied: zipp>=3.1.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from importlib-resources>=3.2.0->matplotlib) (3.23.0)
+Requirement already satisfied: MarkupSafe>=2.0 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from jinja2->altair<6,>=4.0->streamlit) (3.0.2)
+Collecting attrs>=22.2.0 (from jsonschema>=3.0->altair<6,>=4.0->streamlit)
+  Using cached attrs-25.3.0-py3-none-any.whl.metadata (10 kB)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema>=3.0->altair<6,>=4.0->streamlit)
+  Using cached jsonschema_specifications-2025.4.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting referencing>=0.28.4 (from jsonschema>=3.0->altair<6,>=4.0->streamlit)
+  Using cached referencing-0.36.2-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.7.1 (from jsonschema>=3.0->altair<6,>=4.0->streamlit)
+  Using cached rpds_py-0.25.1-cp39-cp39-win_amd64.whl.metadata (4.2 kB)
+Requirement already satisfied: six>=1.5 in c:\users\unish\.conda\envs\deepfake-env8\lib\site-packages (from python-dateutil>=2.8.2->pandas) (1.17.0)
+Using cached numpy-1.24.4-cp39-cp39-win_amd64.whl (14.9 MB)
+Using cached seaborn-0.12.2-py3-none-any.whl (293 kB)
+Using cached scipy-1.10.1-cp39-cp39-win_amd64.whl (42.5 MB)
+Using cached pandas-2.3.0-cp39-cp39-win_amd64.whl (11.1 MB)
+Using cached scikit_learn-1.6.1-cp39-cp39-win_amd64.whl (11.2 MB)
+Using cached matplotlib-3.9.4-cp39-cp39-win_amd64.whl (7.8 MB)
+Using cached ffmpeg_python-0.2.0-py3-none-any.whl (25 kB)
+Using cached streamlit-1.45.1-py3-none-any.whl (9.9 MB)
+Using cached altair-5.5.0-py3-none-any.whl (731 kB)
+Using cached blinker-1.9.0-py3-none-any.whl (8.5 kB)
+Using cached click-8.1.8-py3-none-any.whl (98 kB)
+Using cached GitPython-3.1.44-py3-none-any.whl (207 kB)
+Using cached gitdb-4.0.12-py3-none-any.whl (62 kB)
+Using cached packaging-24.2-py3-none-any.whl (65 kB)
+Using cached pydeck-0.9.1-py2.py3-none-any.whl (6.9 MB)
+Using cached smmap-5.0.2-py3-none-any.whl (24 kB)
+Using cached tenacity-9.1.2-py3-none-any.whl (28 kB)
+Using cached toml-0.10.2-py2.py3-none-any.whl (16 kB)
+Using cached tornado-6.5.1-cp39-abi3-win_amd64.whl (444 kB)
+Using cached watchdog-6.0.0-py3-none-win_amd64.whl (79 kB)
+Using cached pyngrok-7.2.11-py3-none-any.whl (25 kB)
+Using cached contourpy-1.3.0-cp39-cp39-win_amd64.whl (211 kB)
+Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Using cached fonttools-4.58.2-cp39-cp39-win_amd64.whl (1.5 MB)
+Using cached importlib_resources-6.5.2-py3-none-any.whl (37 kB)
+Using cached joblib-1.5.1-py3-none-any.whl (307 kB)
+Using cached jsonschema-4.24.0-py3-none-any.whl (88 kB)
+Using cached attrs-25.3.0-py3-none-any.whl (63 kB)
+Using cached jsonschema_specifications-2025.4.1-py3-none-any.whl (18 kB)
+Using cached kiwisolver-1.4.7-cp39-cp39-win_amd64.whl (55 kB)
+Using cached narwhals-1.42.0-py3-none-any.whl (359 kB)
+Using cached pyarrow-20.0.0-cp39-cp39-win_amd64.whl (25.8 MB)
+Using cached pyparsing-3.2.3-py3-none-any.whl (111 kB)
+Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Using cached pytz-2025.2-py2.py3-none-any.whl (509 kB)
+Using cached referencing-0.36.2-py3-none-any.whl (26 kB)
+Using cached rpds_py-0.25.1-cp39-cp39-win_amd64.whl (231 kB)
+Using cached threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
+Using cached tzdata-2025.2-py2.py3-none-any.whl (347 kB)
+Using cached future-1.0.0-py3-none-any.whl (491 kB)
+Installing collected packages: pytz, fpdf, watchdog, tzdata, tornado, toml, threadpoolctl, tenacity, smmap, rpds-py, python-dateutil, pyparsing, pyngrok, pyarrow, packaging, numpy, narwhals, kiwisolver, joblib, importlib-resources, future, fonttools, cycler, click, blinker, attrs, scipy, referencing, pydeck, pandas, gitdb, ffmpeg-python, contourpy, scikit-learn, matplotlib, jsonschema-specifications, gitpython, seaborn, jsonschema, altair, streamlit
+  Attempting uninstall: packaging
+    Found existing installation: packaging 25.0
+    Uninstalling packaging-25.0:
+      Successfully uninstalled packaging-25.0
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.0.0
+    Uninstalling numpy-2.0.0:
+      Successfully uninstalled numpy-2.0.0
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.13.1
+    Uninstalling scipy-1.13.1:
+      Successfully uninstalled scipy-1.13.1
+
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+deepface 0.0.93 requires fire>=0.4.0, which is not installed.
+deepface 0.0.93 requires Flask>=1.1.2, which is not installed.
+deepface 0.0.93 requires flask-cors>=4.0.1, which is not installed.
+deepface 0.0.93 requires gunicorn>=20.1.0, which is not installed.
+insightface 0.7.3 requires cython, which is not installed.
+insightface 0.7.3 requires easydict, which is not installed.
+insightface 0.7.3 requires prettytable, which is not installed.
+onnxruntime-gpu 1.19.2 requires coloredlogs, which is not installed.
+tensorboard 2.10.1 requires protobuf<3.20,>=3.9.2, but you have protobuf 6.31.1 which is incompatible.
+tensorflow 2.10.0 requires protobuf<3.20,>=3.9.2, but you have protobuf 6.31.1 which is incompatible.
+Successfully installed altair-5.5.0 attrs-25.3.0 blinker-1.9.0 click-8.1.8 contourpy-1.3.0 cycler-0.12.1 ffmpeg-python-0.2.0 fonttools-4.58.2 fpdf-1.7.2 future-1.0.0 gitdb-4.0.12 gitpython-3.1.44 importlib-resources-6.5.2 joblib-1.5.1 jsonschema-4.24.0 jsonschema-specifications-2025.4.1 kiwisolver-1.4.7 matplotlib-3.9.4 narwhals-1.42.0 numpy-1.24.4 packaging-24.2 pandas-2.3.0 pyarrow-20.0.0 pydeck-0.9.1 pyngrok-7.2.11 pyparsing-3.2.3 python-dateutil-2.9.0.post0 pytz-2025.2 referencing-0.36.2 rpds-py-0.25.1 scikit-learn-1.6.1 scipy-1.10.1 seaborn-0.12.2 smmap-5.0.2 streamlit-1.45.1 tenacity-9.1.2 threadpoolctl-3.6.0 toml-0.10.2 tornado-6.5.1 tzdata-2025.2 watchdog-6.0.0
+[STEP 8] Installing timm and facenet-pytorch (no deps) 
+Collecting timm
+  Using cached timm-1.0.15-py3-none-any.whl.metadata (52 kB)
+Using cached timm-1.0.15-py3-none-any.whl (2.4 MB)
+Installing collected packages: timm
+Successfully installed timm-1.0.15
+Collecting facenet-pytorch
+  Using cached facenet_pytorch-2.6.0-py3-none-any.whl.metadata (12 kB)
+Using cached facenet_pytorch-2.6.0-py3-none-any.whl (1.9 MB)
+Installing collected packages: facenet-pytorch
+Successfully installed facenet-pytorch-2.6.0
+[STEP 9] Installing protobuf==3.20.* 
+Collecting protobuf==3.20.*
+  Using cached protobuf-3.20.3-cp39-cp39-win_amd64.whl.metadata (699 bytes)
+Using cached protobuf-3.20.3-cp39-cp39-win_amd64.whl (904 kB)
+Installing collected packages: protobuf
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 6.31.1
+    Uninstalling protobuf-6.31.1:
+      Successfully uninstalled protobuf-6.31.1
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+onnxruntime-gpu 1.19.2 requires coloredlogs, which is not installed.
+onnx 1.18.0 requires protobuf>=4.25.1, but you have protobuf 3.20.3 which is incompatible.
+tensorboard 2.10.1 requires protobuf<3.20,>=3.9.2, but you have protobuf 3.20.3 which is incompatible.
+tensorflow 2.10.0 requires protobuf<3.20,>=3.9.2, but you have protobuf 3.20.3 which is incompatible.
+Successfully installed protobuf-3.20.3
+[COMPLETE] Setup finished. Check setup_deepfake_env.log for details. 
