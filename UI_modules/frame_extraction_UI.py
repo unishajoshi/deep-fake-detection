@@ -26,7 +26,7 @@ def render_frame_extraction_ui():
         combined_dir = st.session_state.get("combined_dir", "all_data_videos")
         if combined_dir and os.path.exists(combined_dir):
             st.session_state.frame_output_dir = extract_frames_from_combined_parallel(
-                combined_dir, frame_rate=frame_rate, overwrite=overwrite, streamlit_mode=True, batch_mode=False
+                combined_dir, frame_rate = frame_rate, overwrite=overwrite, streamlit_mode=True, batch_mode=False
             )
             st.session_state.frame_extraction_success = True
             st.success(f"✅ Frames extracted to: `{st.session_state.frame_output_dir}`")

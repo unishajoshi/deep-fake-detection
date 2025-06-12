@@ -22,10 +22,10 @@ def render_balance_dataset_ui():
 
     if st.session_state.get("balance_done", False):
         result = st.session_state.balance_result
-        st.markdown("🔍 Age-Distribution Before Balancing")
+        st.markdown("🔍 Age-Distribution Before Balancing(undersampling)")
         st.dataframe(result["pre_distribution"])
 
-        st.markdown("🔍 Age-Distribution After Balancing")
+        st.markdown("🔍 Age-Distribution After Balancing (undersampling)")
         st.dataframe(result["post_distribution"])
 
         if result["frame_annotated"]:
