@@ -43,6 +43,25 @@ def balance_and_export_dataset():
     # Generate frame-level annotations
     generate_frame_level_annotations(mode="balanced")
     result["frame_annotated"] = True
+    
+    try:
+        utkface_real = df_balanced[(df_balanced["source"] == "UTKFace") & (df_balanced["label"] == "real")]
+        if not utkface_real.empty:
+            # Prepare rows to match frame-level format
+            utkface_real = utkface_real.copy()
+            utkface_real["video_path"] = utkface_real["path"] 
+            # Align columns
+            required_columns = ["frame", "path", "label", "age_group", "source"]
+            utkface_real = utkface_real[required_columns]
+
+            # Load existing frame annotations and append
+            existing_frame_df = pd.read_csv("final_output/frame_level_annotations.csv")
+            combined_df = pd.concat([existing_frame_df, utkface_real], ignore_index=True)
+            combined_df.to_csv("final_output/frame_level_annotations.csv", index=False)
+
+            result["messages"].append(f"✅ Appended {len(utkface_real)} UTKFace real image entries to frame_level_annotations.csv")
+    except Exception as e:
+        result["messages"].append(f"⚠️ Failed to append UTKFace real image data: {e}")
 
     # Export balanced videos
     copied, missing, out_path = export_balanced_dataset("final_output/balanced_annotations.csv")

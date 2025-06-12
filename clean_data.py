@@ -25,20 +25,23 @@ import glob
 
 
 def clean_videos_and_files(video_dir="all_data_videos", frames_dir="all_data_frames", annotation_file="annotations.csv"):
-    # Clear real and fake video folders
-       # Define target file extensions
+    # Define target file extensions
     extensions = ("*.csv", "*.mp4", "*.avi", "*.mov", "*.mkv", "*.jpg", "*.jpeg", "*.png")
 
     # Recursively find and delete files with the given extensions
     for ext in extensions:
         for file_path in glob.glob(f"**/{ext}", recursive=True):
+            # Skip files inside the SimSwap directory
+            if "SimSwap" in file_path:
+                continue
             if os.path.exists(file_path):
                 try:
                     os.remove(file_path)
                     print(f"✅ Removed: {file_path}")
                 except Exception as e:
                     print(f"❌ Failed to remove {file_path}: {e}")
-    print("✅ All video folders, CSV files, and frame folders cleaned.")
+                    
+    print("✅ All video folders, CSV files, and frame folders cleaned (SimSwap excluded).")
     return True
    
     

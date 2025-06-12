@@ -1,6 +1,7 @@
 import streamlit as st
 import asyncio
 import os
+import psutil
 
 # Project-wide setup
 os.makedirs("logs", exist_ok=True)
@@ -8,6 +9,8 @@ try:
     asyncio.get_running_loop()
 except RuntimeError:
     asyncio.set_event_loop(asyncio.new_event_loop())
+    
+    
 try:
     import os
     os.environ["STREAMLIT_WATCH_MODULE"] = "false"
@@ -51,7 +54,7 @@ def main():
     render_title_section_ui()
     render_sidebar_disclaimer_ui()
     if "initial_cleanup_done" not in st.session_state:
-        clean_videos_and_files()
+        #clean_videos_and_files()
         st.session_state.initial_cleanup_done = True
         
     render_image_import_ui()   

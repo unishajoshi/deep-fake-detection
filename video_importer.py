@@ -22,7 +22,7 @@ def import_real_images(image_files, image_save_dir="all_data_videos/real_images"
 
     for img in image_files:
         original_name = img.name
-        filename = f"utkface_data_real_{original_name}"
+        filename = f"utkface_real_{original_name}"
         image_path = os.path.join(image_save_dir, filename)
         
         with open(image_path, "wb") as f:
