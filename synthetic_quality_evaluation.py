@@ -30,8 +30,9 @@ def extract_middle_frame(video_path):
 
 def evaluate_synthetic_video_quality(real_img_path, synthetic_video_path):
     source_img = cv2.imread(real_img_path)
+    os.makedirs(os.path.dirname(synthetic_video_path), exist_ok=True)
     synth_frame = extract_middle_frame(synthetic_video_path)
-
+       
     if source_img.shape != synth_frame.shape:
         synth_frame = cv2.resize(synth_frame, (source_img.shape[1], source_img.shape[0]))
 

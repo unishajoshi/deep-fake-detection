@@ -33,8 +33,8 @@ def display_grid_pair(real_frames, fake_frames):
     show_grid(real_frames, "🟢 Real", col1, "#4CAF50")
     show_grid(fake_frames, "🔴 Fake", col2, "#F44336")
 
-def preview_sample_frames(real_dir, fake_dir, return_images=False, frame_output_dir="sample_preview_frames", frame_rate=10, count=9):
-    os.makedirs(frame_output_dir, exist_ok=True)
+def preview_sample_frames(real_dir, fake_dir, return_images=False, frame_rate=10, count=9):
+    #os.makedirs(frame_output_dir, exist_ok=True)
 
     def get_sample_frames(video_dir, label):
         sample_videos = [f for f in os.listdir(video_dir) if f.endswith(('.mp4', '.avi'))]

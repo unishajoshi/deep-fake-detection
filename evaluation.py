@@ -98,8 +98,8 @@ def evaluate_on_all_sets(selected_models, streamlit_mode=False):
         transforms.ToPILImage(), transforms.Resize((224, 224)), transforms.ToTensor()
     ])
 
-    test_balanced = pd.read_csv("test_split.csv")
-    full_original = pd.read_csv("frame_level_annotations_original.csv")
+    test_balanced = pd.read_csv("final_output/test_split.csv")
+    full_original = pd.read_csv("final_output/frame_level_annotations_source.csv")
     n_test = len(test_balanced)
 
     celeb_all = full_original[full_original["source"] == "celeb"]
@@ -140,8 +140,8 @@ def evaluate_on_all_sets_agewise(selected_models, transform=None, streamlit_mode
             transforms.ToTensor()
         ])
 
-    balanced_df = pd.read_csv("test_split.csv")
-    original_df = pd.read_csv("frame_level_annotations_original.csv")
+    balanced_df = pd.read_csv("final_output/test_split.csv")
+    original_df = pd.read_csv("final_output/frame_level_annotations_source.csv")
     n_test = len(balanced_df)
 
     age_groups = ["0-10", "10-19", "19-35", "36-50", "51+"]
@@ -241,8 +241,8 @@ def evaluate_on_all_sets_for_trained_models(trained_models, streamlit_mode=False
         transforms.ToTensor(),
     ])
 
-    test_balanced = pd.read_csv("test_split.csv")
-    full_original = pd.read_csv("frame_level_annotations_original.csv")
+    test_balanced = pd.read_csv("final_output/test_split.csv")
+    full_original = pd.read_csv("final_output/frame_level_annotations_source.csv")
     n_test = len(test_balanced)
 
     celeb_all = full_original[full_original["source"] == "celeb"]

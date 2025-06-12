@@ -1,6 +1,5 @@
 import os
 import streamlit as st
-from cleanup import clean_import_directory
 from video_importer import import_real_images
 from logger import log_action
 

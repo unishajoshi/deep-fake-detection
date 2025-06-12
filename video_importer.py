@@ -21,14 +21,16 @@ def import_real_images(image_files, image_save_dir="all_data_videos/real_images"
     new_entries = []
 
     for img in image_files:
-        filename = img.name
+        original_name = img.name
+        filename = f"utkface_data_real_{original_name}"
         image_path = os.path.join(image_save_dir, filename)
         
         with open(image_path, "wb") as f:
             f.write(img.read())
 
         try:
-            age, gender, race, _ = filename.split("_", 3)
+            parsed_name = original_name.replace(".jpg", "").replace(".jpeg", "").replace(".png", "")
+            age, gender, race, _ = parsed_name.split("_", 3)
             age = int(age)
             if age <= 10:
                 age_group = "0-10"

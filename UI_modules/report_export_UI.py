@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 import pandas as pd
-from wrapup import create_full_pdf_report
+from pdf_report_generation import create_full_pdf_report
 
 def render_report_export_ui():
     st.subheader("📄 Download Project Summary Report")
@@ -15,28 +15,43 @@ def render_report_export_ui():
         }
 
         frame_count_summary = len(os.listdir("all_data_frames")) if os.path.exists("all_data_frames") else 0
-        sample_frame_paths = []
+        real_frames = []
+        fake_frames = []
+        real_video_ids = set()
+        fake_video_ids = set()
         for root, _, files in os.walk("all_data_frames"):
             for f in files:
                 if f.endswith(".jpg"):
-                    sample_frame_paths.append(os.path.join(root, f))
-        sample_frame_paths = sample_frame_paths[:6]
+                    file_path = os.path.join(root, f)
 
+                    # Extract video identifier from filename (before '_frame')
+                    # Example: "real_video123_frame015.jpg" → "real_video123"
+                    video_id = f.rsplit('_frame', 1)[0].lower()
+
+                    if "real" in f.lower() and video_id not in real_video_ids and len(real_frames) < 3:
+                        real_frames.append(file_path)
+                        real_video_ids.add(video_id)
+
+                    elif "fake" in f.lower() and video_id not in fake_video_ids and len(fake_frames) < 3:
+                        fake_frames.append(file_path)
+                        fake_video_ids.add(video_id)
+
+                # Break early if enough samples collected
+                if len(real_frames) == 3 and len(fake_frames) == 3:
+                    break
+            if len(real_frames) == 3 and len(fake_frames) == 3:
+                break
+                
         age_annotation_summary = {}
-        if os.path.exists("annotations.csv"):
-            age_df = pd.read_csv("annotations.csv")
+        if os.path.exists("all_data_videos/annotations.csv"):
+            age_df = pd.read_csv("all_data_videos/annotations.csv")
             age_annotation_summary = age_df["age_group"].value_counts().to_dict()
 
         balance_summary = {}
-        if os.path.exists("balanced_metadata.csv"):
-            balanced_df = pd.read_csv("balanced_metadata.csv")
+        if os.path.exists("final_output/balanced_metadata.csv"):
+            balanced_df = pd.read_csv("final_output/balanced_metadata.csv")
             balance_summary = balanced_df["age_group"].value_counts().to_dict()
-
-        eval_balanced = pd.read_csv("final_output/evaluation_results.csv") if os.path.exists("final_output/evaluation_results.csv") else None
-        eval_agewise = pd.read_csv("final_output/age_specific_evaluation.csv") if os.path.exists("final_output/age_specific_evaluation.csv") else None
-        eval_celeb = pd.read_csv("final_output/celeb_cross_eval.csv") if os.path.exists("final_output/celeb_cross_eval.csv") else None
-        eval_ffpp = pd.read_csv("final_output/faceforensics_cross_eval.csv") if os.path.exists("final_output/faceforensics_cross_eval.csv") else None
-
+       
         gradcam_paths = []
         for f in os.listdir("temp_uploads") if os.path.exists("temp_uploads") else []:
             if f.endswith((".jpg", ".png")):
@@ -47,13 +62,10 @@ def render_report_export_ui():
             dataset_summary=dataset_summary,
             cleaning_notes="- Low-res files removed.",
             frame_count_summary=frame_count_summary,
-            sample_frame_paths=sample_frame_paths,
+            real_frames=real_frames,
+            fake_frames=fake_frames,
             age_annotation_summary=age_annotation_summary,
             balance_summary=balance_summary,
-            eval_balanced=eval_balanced,
-            eval_agewise=eval_agewise,
-            eval_celeb=eval_celeb,
-            eval_ffpp=eval_ffpp,
             gradcam_paths=gradcam_paths
         )
 

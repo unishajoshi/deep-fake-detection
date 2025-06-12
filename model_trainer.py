@@ -46,10 +46,10 @@ def prepare_data_split(metadata_path):
     Stratified split by both age group and label.
     """
     # 🧹 Remove old splits if they exist
-    if os.path.exists("train_split.csv"):
-        os.remove("train_split.csv")
-    if os.path.exists("test_split.csv"):
-        os.remove("test_split.csv")
+    if os.path.exists("final_output/train_split.csv"):
+        os.remove("final_output/train_split.csv")
+    if os.path.exists("final_output/test_split.csv"):
+        os.remove("final_output/test_split.csv")
 
     df = pd.read_csv(metadata_path)
 
@@ -69,8 +69,8 @@ def prepare_data_split(metadata_path):
     test_df.drop(columns=["strata"], inplace=True)
 
     # Save results
-    train_df.to_csv("train_split.csv", index=False)
-    test_df.to_csv("test_split.csv", index=False)
+    train_df.to_csv("final_output/train_split.csv", index=False)
+    test_df.to_csv("final_output/test_split.csv", index=False)
 
     return train_df, test_df
 # ------------------------------

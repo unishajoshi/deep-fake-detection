@@ -32,7 +32,7 @@ def render_source_training_eval_ui():
         with st.spinner(f"Training on {train_source}..."):
             trained_models, test_df = train_models_on_source(
                 source_name=train_source.lower(),
-                metadata_csv="frame_level_annotations_original.csv",
+                metadata_csv="final_output/frame_level_annotations_source.csv",
                 selected_models=st.session_state.selected_models,
                 streamlit_mode=True
             )

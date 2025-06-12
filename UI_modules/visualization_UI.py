@@ -34,7 +34,7 @@ def render_visualization_ui():
     if st.button("🥧 Show Age Group Pie Charts"):
         st.session_state.pie_chart_figures = show_age_distribution_pie_charts(return_figures=True)
         st.session_state.show_pie_charts = True
-
+   
     if st.session_state.show_pie_charts and st.session_state.pie_chart_figures:
         st.markdown("### 🥧 Age Group Distribution by Source and Label")
         

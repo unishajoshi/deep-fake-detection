@@ -3,88 +3,88 @@ import os
 import pandas as pd
 from logger import log_action
 from synthetic_data_simswap import generate_synthetic_videos
-
-import streamlit as st
-import os
-import pandas as pd
-from logger import log_action
-from synthetic_data_simswap import generate_synthetic_videos
+from data_preprocessing import FAKE_BALANCE_TARGET, merge_synthetic_into_balanced_annotations, generate_synthetic_frame_annotations
+import json
 
 def render_synthetic_generation_ui():
+    
+
     st.markdown("## 🎭 Generate Synthetic Deepfake Videos")
 
-    try:
-        annotations_df = pd.read_csv("balanced_annotations.csv")
-    except FileNotFoundError:
-        st.error("❌ No metadata file found (balanced_annotations.csv). Cannot proceed.")
-        return
+    if st.button("🎬 Prepare & Generate Synthetic Videos"):
+        try:
+            annotations_df = pd.read_csv("final_output/balanced_metadata.csv")
+        except FileNotFoundError:
+            st.error("❌ No metadata file found (final_output/balanced_metadata.csv). Cannot proceed.")
+            return
 
-    # Filter UTKFace real images for synthesis
-    real_df = annotations_df[annotations_df["source"] == "UTKFace"]
-    if real_df.empty:
-        st.warning("⚠️ No real images found with source 'UTKFace'.")
-        return
+        real_df = annotations_df[(annotations_df["source"] == "UTKFace") & (annotations_df["label"] == "real")]
+        if real_df.empty:
+            st.warning("⚠️ No UTKFace real images available for synthetic generation.")
+            return
 
-    # Filter fake videos from Celeb and FaceForensics++
-    celeb_fake_df = annotations_df[
-        (annotations_df["label"] == "fake") &
-        (annotations_df["source"].isin(["celeb", "faceforensics++"]))
-    ]
+        fake_df = annotations_df[
+            (annotations_df["label"] == "fake") & 
+            (annotations_df["source"].isin(["celeb", "faceforensics"]))
+        ]
+        
+        try:
+            with open("final_output/balance_config.json", "r") as f:
+                config = json.load(f)
+                FAKE_BALANCE_TARGET = config.get("fake_balance_target")
+        except Exception:
+            FAKE_BALANCE_TARGET = None
+        
+        if FAKE_BALANCE_TARGET is None:
+            st.error("❌ FAKE_BALANCE_TARGET not set or could not be loaded. Please run the balancing step first.")
+            return
 
-    # Count fake samples by age group and find the maximum available
-    fake_counts = celeb_fake_df["age_group"].value_counts()
-    max_fake = fake_counts.max()
+        # Prepare plan
+        synthetic_plan = {}
+        for age_group in sorted(real_df["age_group"].unique()):
+            current_fake = fake_df[fake_df["age_group"] == age_group].shape[0]
+            required = max(FAKE_BALANCE_TARGET - current_fake, 0)
+            
+            print(f"[INFO] Age Group: {age_group} | Target: {FAKE_BALANCE_TARGET} | Current Fake: {current_fake} | Synthetic Needed: {required}")
 
-    synthetic_plan = {}
-    for age_group in sorted(real_df["age_group"].unique()):
-        current_fake = fake_counts.get(age_group, 0)
-        required = max(max_fake - current_fake, 0)
-        if required > 0:
-            synthetic_plan[age_group] = required
+            if required > 0:
+                synthetic_plan[age_group] = required
 
-    if not synthetic_plan:
-        st.success("✅ Fake videos are already balanced across all age groups.")
-        return
+        if not synthetic_plan:
+            st.success("✅ Fake videos are already balanced across all age groups.")
+            return
 
-    st.markdown("#### 📝 Select Synthetic Videos to Generate")
-    user_inputs = {}
+        st.markdown("#### 🧠 Synthetic Generation Plan")
+        st.dataframe(pd.DataFrame({
+            "Age Group": list(synthetic_plan.keys()),
+            "Synthetic Videos to Create": list(synthetic_plan.values())
+        }))
 
-    for age_group, default_num in synthetic_plan.items():
-        available_images = real_df[real_df["age_group"] == age_group]
-        max_available = len(available_images)
-        max_selectable = min(default_num * 2, max_available)
-
-        user_inputs[age_group] = st.selectbox(
-        f"Age Group {age_group} - Synthetic Videos to Create",
-        options=list(range(0, int(max_selectable) + 1)),
-        index=int(default_num) if default_num <= max_selectable else int(max_selectable)
-        )
-
-    # 🔍 Show preview summary table
-    if user_inputs:
-        preview_data = {
-            "Age Group": list(user_inputs.keys()),
-            "Existing Fake Videos": [fake_counts.get(ag, 0) for ag in user_inputs.keys()],
-            "Synthetic Videos to Create": list(user_inputs.values())
-        }
-        preview_df = pd.DataFrame(preview_data)
-        st.markdown("#### Existing Videos Vs Synthetic Video to Create")
-        st.dataframe(preview_df)
-
-    # 🔘 Trigger generation
-    if st.button("🎬 Create Synthetic Videos"):
         selected_rows = []
-        for age_group, num_videos in user_inputs.items():
-            group_df = real_df[real_df["age_group"] == age_group]
-            if not group_df.empty and num_videos > 0:
-                samples = group_df.sample(n=min(len(group_df), num_videos))
-                selected_rows.append(samples)
+        for age_group, num_videos in synthetic_plan.items():
+            available = real_df[real_df["age_group"] == age_group]
+            if not available.empty:
+                selected = available.sample(n=min(num_videos, len(available)))
+                selected_rows.append(selected)
 
         if selected_rows:
             final_df = pd.concat(selected_rows).reset_index(drop=True)
             progress_bar = st.progress(0, text="Generating synthetic videos...")
             generate_synthetic_videos(final_df, streamlit_progress=progress_bar, st_module=st)
+            frame_rate = st.session_state.get("selected_frame_rate", 10)
+            
+            merge_synthetic_into_balanced_annotations()
+            generate_synthetic_frame_annotations(frame_rate=frame_rate)
+            
             progress_bar.empty()
-            st.success("✅ All synthetic videos generated successfully!")
-        else:
-            st.warning("⚠️ No samples selected for generation.")
+            st.success("✅ Synthetic videos generated and metadata updated.")
+
+    # Show summary button after generation or anytime user clicks
+    if st.button("📊 Show Final Dataset Summary"):
+        try:
+            final_metadata = pd.read_csv("final_output/balanced_metadata.csv")
+            summary = final_metadata.groupby(["age_group", "label"]).size().unstack(fill_value=0)
+            st.markdown("### 📊 Final Real vs Fake Counts Per Age Group")
+            st.dataframe(summary)
+        except Exception as e:
+            st.error(f"⚠️ Failed to load final metadata: {e}")

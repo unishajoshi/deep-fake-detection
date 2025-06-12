@@ -51,42 +51,48 @@ def visualize_age_distribution(df):
 
 #------------------ Section for: VISUALIZING THE age distribution for SOURCE --------------
 
+
 def show_age_distribution_pie_charts(annotation_file="all_data_videos/annotations.csv", return_figures=False):
     figures = []
 
     try:
         df = pd.read_csv(annotation_file)
-        if "label" not in df.columns or "source" not in df.columns:
-            st.error("Required columns `label` and `source` not found in annotations.")
+        required_cols = {"label", "source", "age"}
+        if not required_cols.issubset(df.columns):
+            st.error(f"Required columns {required_cols} not found in annotations.")
             return []
 
-        sources = df["source"].unique()
-        label_colors = {"real": "#1f77b4", "fake": "#ff7f0e"}  # 🔵 blue, 🟠 orange
+        # Define age bins and labels
+        bins = [0, 18, 30, 45, 60, 100]
+        labels = ["0-17", "18-29", "30-44", "45-59", "60+"]
+        df["age_group"] = pd.cut(df["age"], bins=bins, labels=labels, right=False)
 
         if not return_figures:
-            st.markdown("### 🥧 Age Group Distribution by Source and Label")
-            st.markdown("🔵 **Real**  🟠 **Fake**")
+            st.markdown("### 🥧 Age Group Distribution by Source")
 
+        sources = df["source"].unique()
         cols = st.columns(3)
 
         for i, source in enumerate(sorted(sources)):
             sub_df = df[df["source"] == source]
-            label_counts = sub_df["label"].value_counts().reindex(["real", "fake"], fill_value=0)
-            
-            label_counts = label_counts[label_counts > 0]
+            age_group_counts = sub_df["age_group"].value_counts().sort_index()
 
-            if label_counts.empty:
-                continue  # Skip empty charts
-            
+            # Remove age groups with zero count
+            age_group_counts = age_group_counts[age_group_counts > 0]
+
+            if age_group_counts.empty:
+                continue
+
             fig, ax = plt.subplots()
             wedges, texts, autotexts = ax.pie(
-                label_counts.values,
-                labels=label_counts.index,
-                autopct='%1.1f%%',
-                colors=[label_colors[label] for label in label_counts.index],
+                age_group_counts,
+                labels=age_group_counts.index,
+                autopct=lambda pct: f'{pct:.1f}%' if pct > 0 else '',
                 startangle=90
             )
+            #ax.set_title(f"{source}")
             ax.axis("equal")
+
             if return_figures:
                 figures.append((source, fig))
             else:

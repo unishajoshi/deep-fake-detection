@@ -18,8 +18,8 @@ def render_train_test_split_ui():
         The split is performed **after balancing the dataset by age groups** to ensure that all age ranges are fairly represented in both training and testing phases.
     
         🔁 This split is saved as:
-        - `train_split.csv` (for training)
-        - `test_split.csv` (for evaluation)
+        - `final_output/train_split.csv` (for training)
+        - `final_output/test_split.csv` (for evaluation)
         """)
     # ✅ Initialize session state
     if "train_df" not in st.session_state:
@@ -32,7 +32,7 @@ def render_train_test_split_ui():
     # Button to trigger split
     if st.button("Perform Split"):
         from model_trainer import prepare_data_split
-        st.session_state.train_df, st.session_state.test_df = prepare_data_split("frame_level_annotations.csv")
+        st.session_state.train_df, st.session_state.test_df = prepare_data_split("final_output/frame_level_annotations.csv")
         st.session_state.split_done = True
     
         # ✅ Show persistent success message and preview

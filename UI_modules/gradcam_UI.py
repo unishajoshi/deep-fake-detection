@@ -27,7 +27,7 @@ def render_gradcam_ui():
     selected_model = st.selectbox("🤖 Choose a Model", ["XceptionNet", "EfficientNet", "LipForensics"])
 
     if st.button("🎯 Run Grad-CAM"):
-        df = pd.read_csv("frame_level_annotations.csv")
+        df = pd.read_csv("final_output/frame_level_annotations.csv")
         df["video_id"] = df["frame"].apply(lambda x: os.path.splitext(x)[0])
         real_videos = df[df["label"] == "real"].drop_duplicates("video_id")
         fake_videos = df[df["label"] == "fake"].drop_duplicates("video_id")
@@ -57,3 +57,8 @@ def render_gradcam_ui():
 
         display_images_in_grid(real_images, real_captions, title="🟢 Real Samples")
         display_images_in_grid(fake_images, fake_captions, title="🔴 Fake Samples")
+        
+        st.session_state.gradcam_images_real = real_images
+        st.session_state.gradcam_images_fake = fake_images
+        st.session_state.gradcam_captions_real = real_captions
+        st.session_state.gradcam_captions_fake = fake_captions

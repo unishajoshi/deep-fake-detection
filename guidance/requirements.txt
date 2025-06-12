@@ -1,0 +1,59 @@
+# PyTorch with CUDA 12.1 (if supported)
+torch==2.2.2+cu121
+torchvision==0.17.2+cu121
+torchaudio==2.2.2+cu121
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+# TensorFlow (with GPU if available)
+tensorflow==2.10
+
+# ONNX and ONNX Runtime (with GPU)
+onnx
+onnxruntime-gpu
+
+# Face libraries
+deepface
+facenet-pytorch
+insightface
+retina-face
+mtcnn
+keras
+gdown
+albumentations
+scikit-image
+
+# SimSwap dependencies
+cython 
+moviepy==1.0.3
+
+# Data Science and Visualization
+numpy==1.24.4
+pandas
+scikit-learn
+matplotlib
+seaborn==0.12.2
+scipy==1.10.1
+
+# Utilities and UI
+timm
+tqdm
+fpdf
+ffmpeg-python
+streamlit
+pyngrok
+
+# Compatibility fix
+protobuf==3.20.*
+
+# EfficientNet and LipForensics Dependencies
+huggingface_hub 
+safetensors 
+sympy==1.13.1 
+coloredlogs
+
+# Build mesh_core_cython( For Simswap)
+# Navigate to the Cython directory and compile the extension in-place
+
+#cd insightface\thirdparty\face3d\mesh\cython
+#python setup.py build_ext --inplace
+#cd ..\..\..\..\..

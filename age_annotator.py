@@ -9,12 +9,8 @@ import seaborn as sns
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import torch
 import glob
-
-#--------check for CUDA----------
-# Check CUDA availability for DeepFace (PyTorch backend)
-print("🚀 PyTorch CUDA available:", torch.cuda.is_available())
-if torch.cuda.is_available():
-    print("🧠 PyTorch device:", torch.cuda.get_device_name(0))
+import gc
+from itertools import islice
 
 #------------------ Section for: AGE ANNOTATION FOR EXISTING VIDEOS --------------
 
@@ -66,6 +62,12 @@ def annotate_single_video(video_path, frame_dir, index=None, total=None):
         return None, None
 
 
+
+def chunked_iterable(iterable, size):
+    """Yield successive chunks from iterable of specified size."""
+    it = iter(iterable)
+    return iter(lambda: list(islice(it, size)), [])
+
 def save_age_annotations_parallel(
     video_dir,
     output_csv="all_data_videos/annotations.csv",
@@ -76,7 +78,6 @@ def save_age_annotations_parallel(
 ):
     if os.path.exists(output_csv):
         existing_df = pd.read_csv(output_csv)
-        # Drop rows where source is 'celeb' or 'faceforensics' or 'synthetic'
         existing_df = existing_df[~existing_df["source"].isin(["celeb", "faceforensics", "synthetic"])]
     else:
         existing_df = pd.DataFrame()
@@ -91,54 +92,57 @@ def save_age_annotations_parallel(
         print(f"🧠 Annotating {len(full_paths)} videos using parallel processing...")
 
     if num_workers is None:
-        num_workers = max(1, os.cpu_count() - 1)
+        num_workers = min(4, max(1, os.cpu_count() - 1))  # Conservative thread pool
 
     metadata = []
 
     with ThreadPoolExecutor(max_workers=num_workers) as executor:
-        futures = {
-            executor.submit(annotate_single_video, path, frame_dir, idx, len(full_paths)): path
-            for idx, path in enumerate(full_paths)
-        }
+        for batch in chunked_iterable(enumerate(full_paths), 10):  # Process in batches of 10
+            futures = {
+                executor.submit(annotate_single_video, path, frame_dir, idx, len(full_paths)): path
+                for idx, path in batch
+            }
 
-        for i, future in enumerate(tqdm(as_completed(futures), total=len(futures), disable=batch_mode)):
-            path = futures[future]
-            filename = os.path.basename(path)
-            label = "fake" if "fake" in filename.lower() else "real"
-            source = "celeb" if "celeb" in filename.lower() else (
-                     "faceforensics" if "faceforensics" in filename.lower() else "unknown")
+            for future in as_completed(futures):
+                path = futures[future]
+                filename = os.path.basename(path)
+                label = "fake" if "fake" in filename.lower() else "real"
+                source = "celeb" if "celeb" in filename.lower() else (
+                         "faceforensics" if "faceforensics" in filename.lower() else "unknown")
 
-            try:
-                real_age, age_group = future.result()
-                if real_age is None and age_group is None:
-                    print(f"⚠️ Skipping annotation for: {filename} (no valid frame)")
-                    continue  # ⛔ Skip this video
-            except Exception as e:
-                print(f"❌ Error annotating {filename}: {e}")
-                continue  # ⛔ Also skip on error
+                try:
+                    real_age, age_group = future.result()
+                    if real_age is None and age_group is None:
+                        print(f"⚠️ Skipping annotation for: {filename} (no valid frame)")
+                        continue
+                except Exception as e:
+                    print(f"❌ Error annotating {filename}: {e}")
+                    continue
 
-            metadata.append({
-                "filename": filename,
-                "path": path,
-                "label": label,
-                "source": source,
-                "age": real_age,
-                "age_group": age_group
-            })
+                metadata.append({
+                    "filename": filename,
+                    "path": path,
+                    "label": label,
+                    "source": source,
+                    "age": real_age,
+                    "age_group": age_group
+                })
 
     if streamlit_progress:
         streamlit_progress.empty()
 
+    # Save and clean memory
     new_df = pd.DataFrame(metadata)
     df = pd.concat([existing_df, new_df], ignore_index=True)
     df.drop_duplicates(subset=["filename", "path"], inplace=True)
-
-    # Save updated annotations
     df.to_csv(output_csv, index=False)
 
-    if not batch_mode:
-        print(f"✅ Parallel annotation complete. Saved to {output_csv}")
+    del metadata, new_df, df
+    gc.collect()
 
-    return df
+    if not batch_mode:
+        print(f"✅ Annotation complete. Saved to {output_csv}")
+
+    return pd.read_csv(output_csv)
 
 

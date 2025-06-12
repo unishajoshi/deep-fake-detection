@@ -2,14 +2,19 @@ import os
 import streamlit as st
 from io import BytesIO
 import pandas as pd
-import zipfile
 
 def render_dataset_export_ui():
     st.subheader("📦 Download Age-Diverse Data List & Results")
-
-    if st.button("📥 Download Details"):
-        output_dir = "final_output"
-        zip_buffer = BytesIO()
+    st.markdown("""
+    
+    This section allow to **generate and download a structured CSV file** listing balanced real and fake videos used in the project.
+    This dataset is age-diverse and aims to improve  age fairness in deepfake detection
+    The CSV includes:
+    - ✅ Filename (with prefixes removed)
+    - 🏷️ Label (real or fake)
+    - 📁 Source dataset (Celeb-DF or FaceForensics++ or UTKFace)
+    """)
+    if st.button("📥 Generate Video Index"):
         video_summary = []
 
         for label in ["real", "fake"]:
@@ -26,15 +31,15 @@ def render_dataset_export_ui():
                         video_summary.append({"filename": truncated, "label": label, "source": source})
 
         summary_df = pd.DataFrame(video_summary)
-        summary_csv_path = os.path.join(output_dir, "video_index.csv")
-        summary_df.to_csv(summary_csv_path, index=False)
 
-        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
-            for foldername, _, filenames in os.walk(output_dir):
-                for filename in filenames:
-                    if filename.endswith((".csv", ".pdf")):
-                        path = os.path.join(foldername, filename)
-                        zipf.write(path, arcname=os.path.relpath(path, start=output_dir))
+        # Show preview in app
+        st.dataframe(summary_df)
 
-        zip_buffer.seek(0)
-        st.download_button("⬇️ Download ZIP Archive", zip_buffer, "age_diverse_dataset_outputs.zip", mime="application/zip")
+        # Convert to CSV and make downloadable
+        csv_data = summary_df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="⬇️ Download Video Index CSV",
+            data=csv_data,
+            file_name="video_index.csv",
+            mime="text/csv"
+        )

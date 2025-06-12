@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from cleanup import clean_low_quality_videos
+from clean_data import clean_low_quality_videos
 from logger import log_action
 
 def render_video_cleaning_ui():

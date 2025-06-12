@@ -15,7 +15,9 @@ if torch.cuda.is_available():
 
 
 
-def _process_single_video(video_path, output_dir, frame_rate=10, overwrite=False):
+###-------------rename this function _process_single_video_1 to _process_single_video to use frame label filteration-------------
+
+def _process_single_video_1(video_path, output_dir, frame_rate=10, overwrite=False):
     label = "real" if "real" in video_path else "fake"
     video_name = os.path.splitext(os.path.basename(video_path))[0]
     cap = cv2.VideoCapture(video_path)
@@ -65,8 +67,11 @@ def _process_single_video(video_path, output_dir, frame_rate=10, overwrite=False
     return f"{video_name}: {saved} of {processed} frames saved"
    # return f"{video_name}: {saved} frames saved"
 
-def _process_single_video_1(video_path, output_dir, frame_rate=10, overwrite=False):
+
+##------------_process_single_video without frame label filteration
+def _process_single_video(video_path, output_dir, frame_rate=10, overwrite=False):
     label = "real" if "real" in video_path else "fake"
+    print(f"Processing video: {video_path}")
     video_name = os.path.splitext(os.path.basename(video_path))[0]
     cap = cv2.VideoCapture(video_path)
     count = 0

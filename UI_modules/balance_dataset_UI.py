@@ -10,7 +10,7 @@ def render_balance_dataset_ui():
         st.markdown("""
         Balances dataset across age groups via undersampling.
         Saves:
-        - `balanced_annotations.csv`
+        - `final_output/balanced_annotations.csv`
         - updated frame annotations
         - exported video set
         """)
