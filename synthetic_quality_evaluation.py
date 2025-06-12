@@ -29,6 +29,7 @@ def extract_middle_frame(video_path):
     return frame
 
 def evaluate_synthetic_video_quality(real_img_path, synthetic_video_path):
+    os.makedirs(synthetic_video_path, exist_ok=True)
     source_img = cv2.imread(real_img_path)
     os.makedirs(os.path.dirname(synthetic_video_path), exist_ok=True)
     synth_frame = extract_middle_frame(synthetic_video_path)
