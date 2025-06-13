@@ -54,7 +54,7 @@ def main():
     render_title_section_ui()
     render_sidebar_disclaimer_ui()
     if "initial_cleanup_done" not in st.session_state:
-        #clean_videos_and_files()
+        clean_videos_and_files()
         st.session_state.initial_cleanup_done = True
         
     render_image_import_ui()   
