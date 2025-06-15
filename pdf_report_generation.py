@@ -13,8 +13,10 @@ class PDF(FPDF):
         self.add_font("DejaVu", "B", "fonts/DejaVuLGCSans-Bold.ttf", uni=True)
         self.set_font("DejaVu", "", 11)
     def header(self):
-        self.set_font("DejaVu", "B", 14)
-        self.cell(0, 10, "Deepfake Dataset Pipeline Report", ln=True, align="C")
+        self.set_font("DejaVu", "B", 12)
+        self.cell(0, 10, "Age Diverse Deepfake Dataset Bridging the Age Gap in Deepfake Detection", ln=True, align="C")
+        self.set_font("DejaVu", "", 12)
+        self.cell(0, 10, "Summary Report", ln=True, align="C")
         self.ln(5)
     
     def footer(self):
