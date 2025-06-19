@@ -21,7 +21,7 @@ except Exception as e:
 from clean_data import clean_videos_and_files
 from UI_modules.title_section_UI import render_title_section_ui
 from UI_modules.sidebar_disclaimer_UI import render_sidebar_disclaimer_ui
-from UI_modules.video_import_UI import render_image_import_ui
+from UI_modules.video_import_UI import render_image_import_ui, render_zip_import_ui
 from UI_modules.video_import_UI import render_video_upload_ui, render_import_videos_ui
 from UI_modules.video_cleaning_UI import render_video_cleaning_ui
 from UI_modules.frame_extraction_UI import render_frame_extraction_ui
@@ -54,9 +54,9 @@ def main():
     render_title_section_ui()
     render_sidebar_disclaimer_ui()
     if "initial_cleanup_done" not in st.session_state:
-        clean_videos_and_files()
+        #clean_videos_and_files()
         st.session_state.initial_cleanup_done = True
-        
+    #render_zip_import_ui()
     render_image_import_ui()   
     render_video_upload_ui()
     render_import_videos_ui()

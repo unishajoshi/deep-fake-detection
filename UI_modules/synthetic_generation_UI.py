@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import pandas as pd
 from logger import log_action
-from synthetic_data_simswap import generate_synthetic_videos
+from synthetic_data_simswap import generate_synthetic_videos, get_remaining_images_for_synthetic_generation
 from data_preprocessing import FAKE_BALANCE_TARGET, merge_synthetic_into_balanced_annotations, generate_synthetic_frame_annotations
 import json
 
@@ -98,5 +98,58 @@ def render_synthetic_generation_ui():
             
             progress_bar.empty()
             st.success("✅ Synthetic videos generated and metadata updated.")
-            
+
+
+
+    #----------------------------------------------
+    if st.button("🔄 Resume Incomplete Synthetic Generation"):
+        st.session_state["generation_started"] = True
+        st.session_state["stop_generation"] = False
+    
+        try:
+            annotations_df = pd.read_csv("final_output/balanced_metadata.csv")
+            real_df = annotations_df[(annotations_df["source"] == "UTKFace") & (annotations_df["label"] == "real")]
+            if real_df.empty:
+                st.warning("⚠️ No UTKFace real images available.")
+                return
+        except Exception as e:
+            st.error(f"❌ Error loading metadata: {e}")
+            return
+    
+        try:
+            with open("final_output/balance_config.json", "r") as f:
+                config = json.load(f)
+                FAKE_BALANCE_TARGET = config.get("fake_balance_target")
+        except Exception:
+            st.error("❌ Could not load balance target. Run balancing first.")
+            return
+    
+        resume_df = get_remaining_images_for_synthetic_generation(real_df, FAKE_BALANCE_TARGET)
+        if resume_df.empty:
+            st.success("✅ All synthetic videos already generated.")
+            return
+    
+        st.markdown("### 🔁 Synthetic Videos To Be Generated")
+        st.dataframe(resume_df[["filename", "age_group"]])
+    
+        progress_bar = st.progress(0, text="Resuming synthetic generation...")
+        generate_synthetic_videos(resume_df, streamlit_progress=progress_bar, st_module=st)
+    
+        merge_synthetic_into_balanced_annotations()
+        generate_synthetic_frame_annotations(frame_rate=st.session_state.get("selected_frame_rate", 30))
+    
+        progress_bar.empty()
+        st.success("✅ Resumed synthetic generation completed.")
+
+    #----------------------------------------
+    st.markdown("### 🧩 Finalize Synthetic Metadata")
+
+    if st.button("📌 Merge Synthetic Metadata & Generate Frame Annotations"):
+        st.info("Merging synthetic metadata into balanced and annotation files...")
+        merge_synthetic_into_balanced_annotations()
+        
+        st.info("Generating frame-level annotations for synthetic videos...")
+        generate_synthetic_frame_annotations(frame_rate=30)
+        
+        st.success("✅ Synthetic metadata merged and frame annotations generated.")
     

@@ -93,19 +93,27 @@ def get_model(model_name):
 # ------------------------------
 # Model Training 
 # ------------------------------
+
 def train_model(model_name, train_df, transform, streamlit_mode=False):
     print(f"\n🚀 Training: {model_name}")
     model = get_model(model_name)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = model.to(device)
 
-    train_dataset = FrameDataset(train_df, transform)
+    # Split into training and validation sets (80/20)
+    train_split, val_split = train_test_split(train_df, test_size=0.2, stratify=train_df["label"], random_state=42)
+
+    train_dataset = FrameDataset(train_split, transform)
+    val_dataset = FrameDataset(val_split, transform)
+
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
 
     criterion = nn.BCEWithLogitsLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
-    total_steps = 3 * len(train_loader)
+    num_epochs = 15
+    total_steps = num_epochs * len(train_loader)
     current_step = 0
 
     if streamlit_mode:
@@ -114,19 +122,45 @@ def train_model(model_name, train_df, transform, streamlit_mode=False):
         st.write(f"📚 Training: **{model_name}**")
 
     model.train()
-    for epoch in range(3):
+    for epoch in range(num_epochs):
+        total_loss = 0.0
+        model.train()
+
         for images, labels in train_loader:
             images = images.to(device)
             labels = labels.float().to(device)
+
             optimizer.zero_grad()
             outputs = model(images).squeeze()
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
 
+            total_loss += loss.item()
             current_step += 1
             if streamlit_mode:
                 progress_bar.progress(current_step / total_steps)
+
+        avg_train_loss = total_loss / len(train_loader)
+
+        # --- Validation ---
+        model.eval()
+        all_labels, all_preds = [], []
+        with torch.no_grad():
+            for images, labels in val_loader:
+                images = images.to(device)
+                labels = labels.to(device)
+                outputs = model(images).squeeze()
+                probs = torch.sigmoid(outputs)
+                all_labels.extend(labels.cpu().numpy())
+                all_preds.extend(probs.cpu().numpy())
+
+        try:
+            val_auc = roc_auc_score(all_labels, all_preds)
+        except:
+            val_auc = None
+
+        print(f"📈 Epoch [{epoch+1}/{num_epochs}] | Train Loss: {avg_train_loss:.4f} | Val AUC: {val_auc:.4f}")
 
     if streamlit_mode:
         progress_bar.empty()
@@ -143,6 +177,8 @@ def train_models(selected_models, train_csv, streamlit_mode=False):
         transforms.ToPILImage(),
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.229, 0.224, 0.225]),
     ])
 
     trained_models = {}
@@ -174,6 +210,8 @@ def train_models_on_source(source_name, metadata_csv, selected_models, streamlit
         transforms.ToPILImage(),
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.229, 0.224, 0.225]),
     ])
 
     results = {}

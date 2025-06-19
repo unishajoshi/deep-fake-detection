@@ -95,7 +95,7 @@ def balance_dataset(metadata_path):
         if group_counts.empty:
             continue
 
-        target = int(group_counts.mean())
+        target = 20
 
         if label == "fake":
             FAKE_BALANCE_TARGET = target  # Store for use in synthetic generation
@@ -212,6 +212,21 @@ def generate_frame_level_annotations(
     else:
         raise ValueError("mode must be either 'annotated' or 'balanced'")
     df = pd.read_csv(video_csv)
+    if mode == "annotated":
+        sources = ["celeb", "faceforensics"]
+        samples = []
+
+        for source in sources:
+            for label in ["real", "fake"]:
+                subset = df[(df["source"] == source) & (df["label"] == label)]
+                if not subset.empty:
+                    sampled = subset.sample(n=min(100, len(subset)), random_state=42)
+                    samples.append(sampled)
+
+        if not samples:
+            raise ValueError("No matching videos found for celeb or faceforensics.")
+        
+        df = pd.concat(samples, ignore_index=True)
     metadata = []
 
     # Create a mapping from video name (without extension) to its row
@@ -245,7 +260,7 @@ def generate_frame_level_annotations(
         utkface_real = df[(df["source"] == "UTKFace") & (df["label"] == "real")]
         if not utkface_real.empty:
             utkface_real = utkface_real.copy()
-            utkface_real["frame"] = utkface_real["filename"] 
+            utkface_real["frame"] = utkface_real["filename"]
             utkface_real["path"] = utkface_real["path"]
             utkface_real_subset = utkface_real[["frame", "path", "label", "age_group", "source"]]
             frame_df = pd.concat([frame_df, utkface_real_subset], ignore_index=True)

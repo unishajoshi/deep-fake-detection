@@ -9,11 +9,11 @@ echo "------------------------------" >> $LOGFILE
 
 # Step 1: Create and activate environment
 echo "[STEP 1] Creating Conda environment" >> $LOGFILE
-conda create -n deepfake-env8 python=3.9 -y >> $LOGFILE 2>&1
+conda create -n deepfake-env1 python=3.9 -y >> $LOGFILE 2>&1
 
 # Proper way to activate conda in shell script
 source "$(conda info --base)/etc/profile.d/conda.sh"
-conda activate deepfake-env8 >> $LOGFILE 2>&1
+conda activate deepfake-env1 >> $LOGFILE 2>&1
 
 # Step 2: Install PyTorch with CUDA
 echo "[STEP 2] Installing PyTorch stack with CUDA 12.1" >> $LOGFILE

@@ -70,24 +70,30 @@ def flatten_results_grouped(results_by_dataset):
 # Results for Grouped by Age group
 # ------------------------------
 def flatten_age_specific_results(results_by_model):
+    import pandas as pd
+
     rows, index = [], []
 
-    for model_name, datasets in results_by_model.items():
-        dataset_names = set(k[0] for k in datasets.keys())
-        for dataset_name in dataset_names:
-            row, index_entry = [], (model_name, dataset_name)
-            index.append(index_entry)
+    for model_name, age_group_metrics in results_by_model.items():
+        row = []
+        index.append(model_name)
 
-            for age_group in ["overall", "0-10", "10-18", "19-35", "36-50","51+"]:
-                metrics = datasets.get((dataset_name, age_group), {})
-                row.extend([metrics.get("auc"), metrics.get("pauc"), metrics.get("eer")])
-            rows.append(row)
+        for age_group in ["overall", "0-10", "10-18", "19-35", "36-50", "51+"]:
+            metrics = age_group_metrics.get(age_group, {})
+            row.extend([
+                metrics.get("auc"),
+                metrics.get("pauc"),
+                metrics.get("eer")
+            ])
+
+        rows.append(row)
 
     columns = pd.MultiIndex.from_product(
-    [["overall", "0-10", "10-18", "19-35", "36-50","51+"], ["AUC", "PAUC", "EER"]],
+        [["overall", "0-10", "10-18", "19-35", "36-50", "51+"], ["AUC", "PAUC", "EER"]],
         names=["Age Group", "Metric"]
     )
-    return pd.DataFrame(rows, index=pd.MultiIndex.from_tuples(index, names=["Model", "Dataset"]), columns=columns)
+
+    return pd.DataFrame(rows, index=pd.Index(index, name="Model"), columns=columns)
 
 # ------------------------------
 # Evaluation for all Datasets
@@ -115,6 +121,7 @@ def evaluate_on_all_sets(selected_models, streamlit_mode=False):
     }
 
     results = {}
+    
     for model_name in selected_models:
         if streamlit_mode:
             import streamlit as st
@@ -129,10 +136,7 @@ def evaluate_on_all_sets(selected_models, streamlit_mode=False):
 # Evaluation for all Datasets by age group
 # ------------------------------
 
-def evaluate_on_all_sets_agewise(selected_models, transform=None, streamlit_mode=False):
-    import pandas as pd
-    from torch.utils.data import DataLoader
-
+def evaluate_on_balanced_set_agewise(selected_models, transform=None, streamlit_mode=False):
     if transform is None:
         transform = transforms.Compose([
             transforms.ToPILImage(),
@@ -140,33 +144,15 @@ def evaluate_on_all_sets_agewise(selected_models, transform=None, streamlit_mode
             transforms.ToTensor()
         ])
 
+    # Load only balanced dataset for evaluation
     balanced_df = pd.read_csv("final_output/test_split.csv")
-    original_df = pd.read_csv("final_output/frame_level_annotations_source.csv")
-    n_test = len(balanced_df)
+    age_groups = ["0-10", "10-18", "19-35", "36-50", "51+"]
 
-    age_groups = ["0-10", "10-19", "19-35", "36-50", "51+"]
+    # Group data by age groups
+    def get_age_splits(df):
+        return {group: df[df["age_group"] == group] for group in age_groups if not df[df["age_group"] == group].empty}
 
-    def get_age_splits(source_df):
-        groups = {}
-        for group in age_groups:
-            subset = source_df[source_df["age_group"] == group]
-            if len(subset) > 0:
-                groups[group] = subset
-        return groups
-
-    def safe_sample(df, n, seed):
-        if len(df) == 0:
-            return pd.DataFrame(columns=df.columns)
-        return df.sample(n=min(n, len(df)), random_state=seed)
-
-    celeb_data = original_df[original_df["source"] == "celeb"]
-    ffpp_data = original_df[original_df["source"] == "faceforensics"]
-
-    datasets = {
-        "balance": get_age_splits(balanced_df),
-        "celeb": get_age_splits(safe_sample(celeb_data, n_test, seed=1)),
-        "faceforensics": get_age_splits(safe_sample(ffpp_data, n_test, seed=2)),
-    }
+    age_grouped_data = get_age_splits(balanced_df)
 
     all_results = {}
 
@@ -176,58 +162,18 @@ def evaluate_on_all_sets_agewise(selected_models, transform=None, streamlit_mode
         model = model.to(device)
         model.eval()
 
-        model_results = {}
+        results = {}
+        overall_metrics = evaluate_model(model, {"overall": balanced_df}, transform)
+        results["overall"] = overall_metrics.get("overall", {"auc": None, "pauc": None, "eer": None})
+        for age_group, df_group in age_grouped_data.items():
+            dataset = FrameDataset(df_group, transform=transform)
+            loader = DataLoader(dataset, batch_size=32, shuffle=False)
 
-        for dataset_name, age_group_map in datasets.items():
-            # ✅ Compute overall results
-            if age_group_map:
-                full_df = pd.concat(age_group_map.values(), ignore_index=True)
-                loader = DataLoader(FrameDataset(full_df, transform), batch_size=32, shuffle=False)
+            # Evaluate using your custom evaluation logic
+            metrics = evaluate_model(model, {age_group: df_group}, transform)
+            results[age_group] = metrics.get(age_group, {"auc": None, "pauc": None, "eer": None})
 
-                all_labels, all_scores = [], []
-                with torch.no_grad():
-                    for images, labels in loader:
-                        images, labels = images.to(device), labels.to(device)
-                        outputs = model(images).squeeze()
-                        scores = torch.sigmoid(outputs)
-                        all_labels.extend(labels.view(-1).cpu().numpy())
-                        all_scores.extend(scores.view(-1).cpu().numpy())
-
-                if len(set(all_labels)) < 2:
-                    model_results[(dataset_name, "overall")] = {"auc": None, "pauc": None, "eer": None}
-                else:
-                    auc = round(roc_auc_score(all_labels, all_scores), 4)
-                    pauc = round(average_precision_score(all_labels, all_scores), 4)
-                    fpr, tpr, _ = roc_curve(all_labels, all_scores)
-                    eer = calculate_eer(fpr, tpr)
-                    model_results[(dataset_name, "overall")] = {"auc": auc, "pauc": pauc, "eer": eer}
-
-            # ✅ Evaluate age-group subsets
-            for group, df_subset in age_group_map.items():
-                if df_subset.empty:
-                    model_results[(dataset_name, group)] = {"auc": None, "pauc": None, "eer": None}
-                    continue
-
-                loader = DataLoader(FrameDataset(df_subset, transform), batch_size=32, shuffle=False)
-                all_labels, all_scores = [], []
-                with torch.no_grad():
-                    for images, labels in loader:
-                        images, labels = images.to(device), labels.to(device)
-                        outputs = model(images).squeeze()
-                        scores = torch.sigmoid(outputs)
-                        all_labels.extend(labels.view(-1).cpu().numpy())
-                        all_scores.extend(scores.view(-1).cpu().numpy())
-
-                if len(set(all_labels)) < 2:
-                    model_results[(dataset_name, group)] = {"auc": None, "pauc": None, "eer": None}
-                else:
-                    auc = round(roc_auc_score(all_labels, all_scores), 4)
-                    pauc = round(average_precision_score(all_labels, all_scores), 4)
-                    fpr, tpr, _ = roc_curve(all_labels, all_scores)
-                    eer = calculate_eer(fpr, tpr)
-                    model_results[(dataset_name, group)] = {"auc": auc, "pauc": pauc, "eer": eer}
-
-        all_results[model_name] = model_results
+        all_results[model_name] = results
 
     return all_results
 

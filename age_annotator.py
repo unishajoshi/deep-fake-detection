@@ -78,7 +78,6 @@ def save_age_annotations_parallel(
 ):
     if os.path.exists(output_csv):
         existing_df = pd.read_csv(output_csv)
-        existing_df = existing_df[~existing_df["source"].isin(["celeb", "faceforensics", "synthetic"])]
     else:
         existing_df = pd.DataFrame()
 

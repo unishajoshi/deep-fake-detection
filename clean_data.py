@@ -1,6 +1,7 @@
 import os
 import shutil
 import cv2
+import pandas as pd
 
 #---------------------section: Cleanup the files and folders---------------------------
 def remove_readonly(func, path, _):
@@ -74,13 +75,24 @@ def check_video_quality(video_path, min_width= 224, min_height=224):
     cap.release()
     return width >= min_width and height >= min_height
 
-def clean_low_quality_videos(directory):
+def clean_low_quality_videos(directory, min_width=224, min_height=224):
+    removed_files = []
+    valid_extensions = (".mp4", ".avi", ".mov")
+
+    if not os.path.exists(directory):
+        return removed_files  # return empty list if path doesn't exist
+
     for filename in os.listdir(directory):
         path = os.path.join(directory, filename)
-        if os.path.isfile(path) and not check_video_quality(path):
-            os.remove(path)
-            print(f"Removed low-quality video: {filename}")
-
+        if os.path.isfile(path) and filename.lower().endswith(valid_extensions):
+            try:
+                if not check_video_quality(path, min_width, min_height):
+                    os.remove(path)
+                    removed_files.append(filename)
+            except Exception as e:
+                print(f"Error processing {filename}: {e}")
+    return removed_files
+    
 #--------------- Section for: Removing pdf files----------------------
 
 def remove_pdf_files(folder="final_output"):
@@ -90,3 +102,39 @@ def remove_pdf_files(folder="final_output"):
             os.remove(file)
         except Exception as e:
             print(f"[ERROR] Could not remove {file}: {e}")
+
+#--------------- Section for: Removing loq quality image files----------------------
+
+def is_valid_image(image_path, min_width=224, min_height=224):
+    try:
+        img = cv2.imread(image_path)
+        if img is None:
+            return False
+        height, width = img.shape[:2]
+        return width >= min_width and height >= min_height
+    except:
+        return False
+
+def clean_low_quality_images(image_dir, annotations_file, min_width=224, min_height=224):
+    if not os.path.exists(annotations_file):
+        return []
+
+    df = pd.read_csv(annotations_file)
+    to_remove = []
+
+    for index, row in df.iterrows():
+        path = row.get("path")
+        if row.get("source") == "UTKFace" and isinstance(path, str) and path.startswith(image_dir):
+            if not is_valid_image(path, min_width, min_height):
+                try:
+                    os.remove(path)
+                    to_remove.append(index)
+                    print(f"Removed low-quality image: {path}")
+                except Exception as e:
+                    print(f"Error removing image {path}: {e}")
+
+    df.drop(index=to_remove, inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    df.to_csv(annotations_file, index=False)
+
+    return to_remove

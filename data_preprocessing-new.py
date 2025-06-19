@@ -77,10 +77,11 @@ def balance_dataset(metadata_path):
     - For fake: undersample Celeb/FF++ to average, and store target globally.
     - For real: balance Celeb/FF++ to average, then use UTKFace to equalize real age group sizes.
     """
+    import json
+
     global FAKE_BALANCE_TARGET
 
     df = pd.read_csv(metadata_path)
-
     required_cols = {"age_group", "label", "source"}
     if not required_cols.issubset(df.columns):
         raise ValueError(f"Missing columns: {required_cols - set(df.columns)}")
@@ -96,9 +97,8 @@ def balance_dataset(metadata_path):
             continue
 
         target = int(group_counts.mean())
-
         if label == "fake":
-            FAKE_BALANCE_TARGET = target  # Store for use in synthetic generation
+            FAKE_BALANCE_TARGET = target  # For synthetic use later
 
         for age_group, group in subset.groupby("age_group"):
             sampled = group.sample(n=target, replace=False, random_state=42) if len(group) >= target else group.copy()
@@ -107,18 +107,40 @@ def balance_dataset(metadata_path):
             if label == "real":
                 real_group_sizes[age_group] = len(sampled)
 
-    # --- Step 2: Use UTKFace to top-up real groups to match max real group size ---
-    max_real_size = max(real_group_sizes.values(), default=0)
+    # --- Step 2: Allocate UTKFace images for synthetic generation ---
+    synthetic_allocations = []
     utk_real_df = df[(df["label"] == "real") & (df["source"] == "UTKFace")]
-    
-    for age_group, group in utk_real_df.groupby("age_group"):
-        current_size = real_group_sizes.get(age_group, 0)
-        needed = max_real_size - current_size
+
+    for age_group in sorted(df["age_group"].unique()):
+        current_fake = df[(df["label"] == "fake") & (df["source"] != "UTKFace") & (df["age_group"] == age_group)].shape[0]
+        needed = max(FAKE_BALANCE_TARGET - current_fake, 0)
 
         if needed <= 0:
             continue
 
-        # Score each sample using analyze_face
+        available = utk_real_df[utk_real_df["age_group"] == age_group]
+        if not available.empty:
+            reserved = available.sample(n=min(needed, len(available)), random_state=42)
+            synthetic_allocations.append(reserved)
+
+    # Save reserved synthetic rows
+    if synthetic_allocations:
+        synthetic_df = pd.concat(synthetic_allocations).drop_duplicates("filename")
+        synthetic_df.to_csv("final_output/synthetic_allocation.csv", index=False)
+        print(f"[INFO] Reserved {len(synthetic_df)} UTKFace images for synthetic generation.")
+    else:
+        synthetic_df = pd.DataFrame(columns=df.columns)
+
+    # --- Step 3: Top-up real groups using remaining UTKFace ---
+    max_real_size = max(real_group_sizes.values(), default=0)
+    remaining_utk_df = utk_real_df[~utk_real_df["filename"].isin(synthetic_df["filename"])]
+
+    for age_group, group in remaining_utk_df.groupby("age_group"):
+        current_size = real_group_sizes.get(age_group, 0)
+        needed = max_real_size - current_size
+        if needed <= 0:
+            continue
+
         scored_rows = []
         for row in group.itertuples(index=False):
             image_path = os.path.join("all_data_videos", "real_images", row.filename)
@@ -126,7 +148,6 @@ def balance_dataset(metadata_path):
                 attrs = analyze_face(image_path)
                 if not attrs:
                     continue
-                # Scoring: prefer neutral, low yaw/pitch, and mid-range brightness
                 score = (
                     (1 if attrs["expression"] == "neutral" else 0) +
                     (1 - abs(attrs["yaw"]) / 90) +
@@ -138,31 +159,24 @@ def balance_dataset(metadata_path):
                 print(f"[WARN] Failed to score {row.filename}: {e}")
                 continue
 
-        # Sort and select top 'needed'
         scored_rows.sort(key=lambda x: x[1], reverse=True)
         top_rows = [x[0] for x in scored_rows[:needed]]
-
-        if not top_rows:
-            continue
-
-        sampled = pd.DataFrame(top_rows)
-        balanced_dfs.append(sampled)
-
+        if top_rows:
+            balanced_dfs.append(pd.DataFrame(top_rows))
         if len(top_rows) < needed:
-            print(f"⚠️ UTKFace: age group '{age_group}' underfilled — needed {needed}, selected {len(top_rows)}")
-            
-            
-    # --- Step 3: Finalize and save ---
+            print(f"⚠️ UTKFace underfilled for {age_group}: needed {needed}, selected {len(top_rows)}")
+
+    # --- Step 4: Finalize and save ---
     if not balanced_dfs:
         raise ValueError("No data was selected for balancing.")
 
     df_balanced = pd.concat(balanced_dfs, ignore_index=True).sample(frac=1, random_state=42)
     df_balanced.to_csv("final_output/balanced_metadata.csv", index=False)
-    
+
     with open("final_output/balance_config.json", "w") as f:
-        print(f"[INFO] Saving FAKE_BALANCE_TARGET = {FAKE_BALANCE_TARGET}")
         json.dump({"fake_balance_target": FAKE_BALANCE_TARGET}, f)
-    
+        print(f"[INFO] Saved FAKE_BALANCE_TARGET = {FAKE_BALANCE_TARGET}")
+
     return df_balanced
 
 def export_balanced_dataset(balanced_csv="final_output/balanced_annotations.csv", output_dir="final_output"):

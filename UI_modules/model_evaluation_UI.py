@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from evaluation import evaluate_on_all_sets, flatten_results_grouped, evaluate_on_all_sets_agewise,flatten_age_specific_results
+from evaluation import evaluate_on_all_sets, flatten_results_grouped, evaluate_on_balanced_set_agewise,flatten_age_specific_results
 from logger import log_action
 import pandas as pd
 
@@ -50,7 +50,7 @@ def render_model_evaluation_ui():
             st.session_state.age_eval_done = False
         else:
             with st.spinner("Running age-specific evaluation..."):
-                age_results = evaluate_on_all_sets_agewise(
+                age_results = evaluate_on_balanced_set_agewise(
                     selected_models=st.session_state.selected_models,
                     streamlit_mode=True
                 )

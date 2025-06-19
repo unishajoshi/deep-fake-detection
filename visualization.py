@@ -64,7 +64,7 @@ def show_age_distribution_pie_charts(annotation_file="all_data_videos/annotation
 
         # Define age bins and labels
         bins = [0, 18, 30, 45, 60, 100]
-        labels = ["0-17", "18-29", "30-44", "45-59", "60+"]
+        labels = ["0-10", "10-18", "19-35", "35-50", "51+"]
         df["age_group"] = pd.cut(df["age"], bins=bins, labels=labels, right=False)
 
         if not return_figures:
