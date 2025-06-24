@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
 import cv2
 from synthetic_quality_evaluation import evaluate_synthetic_video_quality, extract_middle_frame
 
@@ -91,7 +92,11 @@ def render_quality_evaluation_ui():
 
                 real_img = cv2.cvtColor(real_img, cv2.COLOR_BGR2RGB)
                 synth_frame = cv2.cvtColor(synth_frame, cv2.COLOR_BGR2RGB)
-
+                
+                # Resize synth_frame to match real_img size
+                real_img = cv2.resize(real_img, (synth_frame.shape[1], synth_frame.shape[0]))
+                
+                # Display side-by-side
                 st.image([real_img, synth_frame], caption=["Real Image", "Synthetic Frame (Middle)"], width=300)
             except Exception as e:
                 st.error(f"❌ Error evaluating `{synth_choice}`: {str(e)}")
@@ -100,7 +105,24 @@ def render_quality_evaluation_ui():
     try:
         final_metadata = pd.read_csv("final_output/balanced_annotations.csv")
         summary = final_metadata.groupby(["age_group", "label"]).size().unstack(fill_value=0)
-        st.markdown("### 📊 Age-balanced Dataset Prepared for Training")
+        st.markdown("### 📊 Age-diverse Dataset Prepared for Training")
         st.dataframe(summary)
+
+        # Plot bar chart
+        st.markdown("### 📈 Final Real vs Fake Data")
+        # Create 2 columns: narrow plot in col1, empty col2
+        col1, col2,col3 = st.columns([2, 1,1])  # Adjust ratio as needed
+        
+        with col1:
+            fig, ax = plt.subplots(figsize=(6,3))  # Smaller plot size
+            summary.plot(kind="bar", ax=ax)
+            ax.set_xlabel("Age Group")
+            ax.set_ylabel("Count")
+            ax.set_title("Real vs Fake")
+            ax.legend(title="Label", fontsize=6)
+            ax.tick_params(axis='x', labelrotation=45, labelsize=6)
+            ax.tick_params(axis='y', labelsize=6)
+            st.pyplot(fig)
+
     except Exception as e:
         st.error(f"⚠️ Failed to load final metadata: {e}")

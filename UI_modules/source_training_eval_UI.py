@@ -7,26 +7,32 @@ from evaluation import evaluate_on_all_sets_for_trained_models, flatten_results_
 def render_source_training_eval_ui():
     st.markdown("## 🔄 Deepfake Detection with Original Data")
     st.markdown("### 🏋️ Source-Specific Model Training")
-
+    
+    # Initialize only once
     if "selected_models" not in st.session_state:
         st.session_state.selected_models = []
+    
     if "trained_models" not in st.session_state:
         st.session_state.trained_models = {}
+    
     if "source_training_done" not in st.session_state:
         st.session_state.source_training_done = False
+    
+    # Temporary checkbox states
+    xcep = st.checkbox("XceptionNet", key="src_xcep")
+    eff = st.checkbox("EfficientNet", key="src_eff")
+    lip = st.checkbox("LipForensics", key="src_lip")
+    
+    # Overwrite the list completely (no duplicates)
+    st.session_state.selected_models = []
+    if xcep:
+        st.session_state.selected_models.append("XceptionNet")
+    if eff:
+        st.session_state.selected_models.append("EfficientNet")
+    if lip:
+        st.session_state.selected_models.append("LipForensics")
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        if st.checkbox("XceptionNet", value="XceptionNet" in st.session_state.selected_models, key="src_xcep"):
-            st.session_state.selected_models.append("XceptionNet")
-    with col2:
-        if st.checkbox("EfficientNet", value="EfficientNet" in st.session_state.selected_models, key="src_eff"):
-            st.session_state.selected_models.append("EfficientNet")
-    with col3:
-        if st.checkbox("LipForensics", value="LipForensics" in st.session_state.selected_models, key="src_lip"):
-            st.session_state.selected_models.append("LipForensics")
-
-    train_source = st.radio("Select training dataset source:", ["celeb", "FaceForensics++"], horizontal=True)
+    train_source = st.radio("Select training dataset source:", ["celeb", "faceforensics"], horizontal=True)
 
     if st.button("Train Models"):
         with st.spinner(f"Training on {train_source}..."):
@@ -50,6 +56,7 @@ def render_source_training_eval_ui():
             with st.spinner("Evaluating..."):
                 cross_results = evaluate_on_all_sets_for_trained_models(
                     st.session_state.trained_models,
+                    train_source.lower(),  # pass the selected source name
                     streamlit_mode=True
                 )
                 df_cross_eval = flatten_results_grouped(cross_results)

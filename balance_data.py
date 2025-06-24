@@ -63,6 +63,25 @@ def balance_and_export_dataset():
     except Exception as e:
         result["messages"].append(f"⚠️ Failed to append UTKFace real image data: {e}")
 
+    try:
+        frame_df = pd.read_csv("final_output/frame_level_annotations.csv")
+        utk_rows = frame_df[frame_df["source"] == "UTKFace"]
+
+        copied_utk = 0
+        for _, row in utk_rows.iterrows():
+            src = row["path"]
+            dst = os.path.join("all_data_frames", os.path.basename(src))
+            if os.path.exists(src):
+                if not os.path.exists(dst):
+                    shutil.copy(src, dst)
+                copied_utk += 1
+            else:
+                result["missing"].append(src)
+
+        result["messages"].append(f"✅ Copied {copied_utk} UTKFace real image frames to all_data_frames/")
+    except Exception as e:
+        result["messages"].append(f"⚠️ Failed to copy UTKFace real image frames: {e}")
+
     # Export balanced videos
     copied, missing, out_path = export_balanced_dataset("final_output/balanced_annotations.csv")
     result["copied"] = copied

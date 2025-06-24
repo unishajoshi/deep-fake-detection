@@ -1,5 +1,4 @@
 import subprocess
-import streamlit as st
 import os
 import pandas as pd
 import cv2
@@ -12,7 +11,6 @@ from concurrent.futures import ThreadPoolExecutor
 from functools import lru_cache
 from tqdm import tqdm
 from insightface.app import FaceAnalysis
-#from resume_synthetic_UI import resume_synthetic_generation
 
 # Load InsightFace model once globally
 face_app = FaceAnalysis(name='buffalo_l', providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
@@ -20,14 +18,29 @@ face_app.prepare(ctx_id=0)
 import subprocess
     
 def analyze_face(image_path):
+    import cv2
     img = cv2.imread(image_path)
     faces = face_app.get(img)
     if not faces:
         return None
+
     face = faces[0]
 
     gender = "male" if face.get('gender', 1) == 1 else "female"
-    expression = "neutral" if face.get('expression', 0) == 0 else "non-neutral"
+
+    # Full expression mapping
+    expression_map = {
+        0: "neutral",
+        1: "happy",
+        2: "sad",
+        3: "surprise",
+        4: "anger",
+        5: "disgust",
+        6: "fear"
+    }
+    expression_code = face.get('expression', 0)
+    expression = expression_map.get(expression_code, "unknown")
+
     yaw = face.get('pose', [0, 0])[0]
     pitch = face.get('pose', [0, 0])[1]
     brightness = cv2.mean(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))[0]
@@ -44,10 +57,8 @@ def analyze_face(image_path):
 def cached_analyze_face(path):
     return analyze_face(path)
 
-def match_best_video_by_face_attributes(image_path, frame_df, frame_attrs_df, frame_dir="all_data_frames"):
-    if frame_attrs_df.empty:
-        print("[WARN] No frame attributes available for matching.")
-        return None
+def match_best_video_by_face_attributes(image_path, frame_df, frame_index, frame_dir="all_data_frames"):
+
 
     img_attrs = cached_analyze_face(image_path)
     if not img_attrs:
@@ -66,10 +77,12 @@ def match_best_video_by_face_attributes(image_path, frame_df, frame_attrs_df, fr
         video_filename = row['filename']
         video_base = os.path.splitext(video_filename)[0]
 
-        # Get top 5 frames instead of just 2
-        candidate_frames = frame_attrs_df[
-            frame_attrs_df['frame_file'].str.contains(video_base)
-        ].head(5)
+        # Get random 5 frames for matching
+        if video_base not in frame_index.groups:
+            continue  # Skip if video has no precomputed frame data
+        
+        candidate_group = frame_index.get_group(video_base)
+        candidate_frames = candidate_group.sample(n=min(5, len(candidate_group)), random_state=42)
 
         def compute_score(frame_row):
             if frame_row['gender'] != img_attrs['gender']:
@@ -79,10 +92,11 @@ def match_best_video_by_face_attributes(image_path, frame_df, frame_attrs_df, fr
             expression_score = 1 if frame_row['expression'] == 'neutral' else 0
             yaw_score = 1 - min(abs(frame_row['yaw'] - img_attrs['yaw']) / 90, 1)
             pitch_score = 1 - min(abs(frame_row['pitch'] - img_attrs['pitch']) / 90, 1)
-            brightness_score = 1 - min(abs(frame_row['brightness'] - img_attrs['brightness']) / 128, 1)
+            brightness_diff = abs(frame_row['brightness'] - img_attrs['brightness']) / 255
+            brightness_score = 1 - min(brightness_diff, 1)
 
             total_score = (
-                2.0 * expression_score +
+                1.0 * expression_score +
                 1.5 * yaw_score +
                 1.5 * pitch_score +
                 1.0 * brightness_score
@@ -102,10 +116,10 @@ def match_best_video_by_face_attributes(image_path, frame_df, frame_attrs_df, fr
         video_path = os.path.join("all_data_videos", "real", best_video_filename)
         if os.path.exists(video_path):
             print(f"\n✅ Best match frame: {os.path.basename(best_match)} from {best_video_filename} | Score: {best_score:.2f}")
-            return video_path
+            return video_path, best_score
 
     print(f"\n[INFO] No good match found for: {os.path.basename(image_path)}")
-    return None
+    return None, None
 
 def precompute_frame_attributes(frame_dir="all_data_frames", output_csv="final_output/precomputed_frame_attrs.csv", st_module=None):
     results = []
@@ -201,6 +215,7 @@ def generate_synthetic_videos(image_df, streamlit_progress=None, st_module=None)
 
     total = len(image_df)
     new_annotations = []
+    match_log = [] 
     
     precomputed_path = "final_output/precomputed_frame_attrs.csv"
     if not os.path.exists(precomputed_path) or os.path.getsize(precomputed_path) == 0:
@@ -216,16 +231,21 @@ def generate_synthetic_videos(image_df, streamlit_progress=None, st_module=None)
         print("⚠️ Precomputed frame attribute file not found. It will be generated during runtime.")
         frame_attrs_df = pd.DataFrame()  
 
+    # Extract video_id from frame_file (before _frameXYZ.jpg)
+    frame_attrs_df["video_id"] = frame_attrs_df["frame_file"].str.extract(r"(?:fake_|real_)?([a-zA-Z0-9_]+(?:_data)?(?:_id\d+_\d+))")
+    # Group frame attributes by video_id for fast lookup
+    frame_index = frame_attrs_df.groupby("video_id")
+
     for i, row in enumerate(image_df.itertuples(index=False), 1):
         if st_module and st_module.session_state.get("stop_generation", False):
             print("🛑 Generation manually stopped by user.")
             break
         try:
             image_path = os.path.join("all_data_videos/real_images", row.filename)
-            matched_video = match_best_video_by_face_attributes(
+            matched_video, best_score = match_best_video_by_face_attributes(
                 image_path=image_path,
                 frame_df=video_df,
-                frame_attrs_df=frame_attrs_df,
+                frame_index=frame_index,
                 frame_dir="all_data_frames"
             )
 
@@ -262,14 +282,32 @@ def generate_synthetic_videos(image_df, streamlit_progress=None, st_module=None)
                 print(f"[ERROR] Failed to generate: {output_filename}")
                 continue
 
-            new_annotations.append({
+            match_log.append({
+                "image": row.filename,
+                "video": os.path.basename(matched_video),
+                "score": best_score  # Make sure to return score from match_best_video_by_face_attributes
+            })
+
+            latest_entry = {
                 "filename": output_filename,
                 "path": output_path,
                 "label": "fake",
                 "source": "synthetic",
                 "age": row.age,
                 "age_group": row.age_group
-            })
+            }
+            new_annotations.append(latest_entry)
+            
+            temp_annopath = "final_output/temp_synthetic_annotations.csv"
+            try:
+                df_row = pd.DataFrame([latest_entry])
+                if os.path.exists(temp_annopath):
+                    df_row.to_csv(temp_annopath, mode='a', header=False, index=False)
+                else:
+                    df_row.to_csv(temp_annopath, index=False)  # write with header if file doesn't exist yet
+                print(f"💾 Appended synthetic annotation for: {output_filename}")
+            except Exception as e:
+                print(f"[ERROR] Could not append temporary synthetic annotation: {e}")
 
             if streamlit_progress and st_module:
                 streamlit_progress.progress(i / total, text=f"Generating ({i}/{total})...")
@@ -278,60 +316,4 @@ def generate_synthetic_videos(image_df, streamlit_progress=None, st_module=None)
             print(f"[ERROR] Unexpected failure for row {i}: {e}")
             continue
 
-    st.markdown("### 🔁 Resume Interrupted Synthetic Generation")
-    if st.button("🔄 Resume Synthetic Generation"):
-        st.info("Resuming synthetic video generation...")
-        resume_synthetic_generation()
-        st.success("✅ Resumed synthetic video generation completed.")
-
-    # Append new synthetic entries to final metadata
-    if new_annotations:
-        try:
-            existing_df = pd.read_csv(balance_metadata_path)
-            updated_df = pd.concat([existing_df, pd.DataFrame(new_annotations)], ignore_index=True)
-            updated_df.to_csv(balance_metadata_path, index=False) 
-            updated_df.to_csv(metadata_path, index=False)   
-            print(f"[INFO] Metadata updated with {len(new_annotations)} synthetic videos.")
-        except Exception as e:
-            print(f"[ERROR] Could not update metadata: {e}")
-
-def get_remaining_images_for_synthetic_generation(real_df, target_per_group, synthetic_dir="all_data_videos/synthetic"):
-    # Step 1: Detect already created synthetic videos from filenames
-    existing_synthetic_files = os.listdir(synthetic_dir)
-    existing_age_group_counts = {}
-    used_image_names = set()
-
-    for fname in existing_synthetic_files:
-        if not fname.startswith("utkface_fake_"):
-            continue
-        parts = fname.split("_on_")
-        if len(parts) != 2:
-            continue
-        image_id_part = parts[0].replace("utkface_fake_", "")
-        matching_row = real_df[real_df["filename"].str.contains(image_id_part)]
-        if not matching_row.empty:
-            age_group = matching_row.iloc[0]["age_group"]
-            existing_age_group_counts[age_group] = existing_age_group_counts.get(age_group, 0) + 1
-            used_image_names.add(matching_row.iloc[0]["filename"])
-
-    # Step 2: Decide how many more are needed and select remaining images
-    remaining_rows = []
-    for age_group in sorted(real_df["age_group"].unique()):
-        current_count = existing_age_group_counts.get(age_group, 0)
-        needed = max(target_per_group - current_count, 0)
-        print(f"[Resume] Age Group: {age_group} | Existing: {current_count} | Needed: {needed}")
-
-        if needed > 0:
-            candidates = real_df[
-                (real_df["age_group"] == age_group) &
-                (~real_df["filename"].isin(used_image_names))
-            ]
-            selected = candidates.sample(n=min(needed, len(candidates)), random_state=42)
-            remaining_rows.append(selected)
-
-    if remaining_rows:
-        return pd.concat(remaining_rows).reset_index(drop=True)
-    else:
-        return pd.DataFrame()
-
-#------------------------------------Synthetic Data creation---------------------------
+    
