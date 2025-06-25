@@ -40,6 +40,10 @@ def render_dataset_export_ui():
     
             # Rename to match expected output column name
             video_df.rename(columns={"frame": "filename"}, inplace=True)
+           
+            # Save to final_output folder
+            output_path = os.path.join("final_output", "final_age_diverse_dataset.csv")
+            video_df.to_csv(output_path, index=False)
     
             # Preview in Streamlit
             st.dataframe(video_df)
@@ -49,7 +53,7 @@ def render_dataset_export_ui():
             st.download_button(
                 label="⬇️ Download Metadata File",
                 data=csv_data,
-                file_name="video_index.csv",
+                file_name="final_age_diverse_dataset.csv",
                 mime="text/csv"
             )
        except Exception as e:
