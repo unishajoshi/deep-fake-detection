@@ -14,7 +14,7 @@ def render_frame_extraction_ui():
         - Saves frames as `.jpg` in `all_data_frames/`.
         """)
 
-    frame_rate = st.selectbox("Select frame extraction rate (every Nth frame)", options=[1, 2, 5, 10, 15, 20, 25, 30], index=3)
+    frame_rate = st.selectbox("Select frame extraction rate (every Nth frame)", options=[1, 2, 5, 10], index=3)
     st.session_state["selected_frame_rate"] = frame_rate
     overwrite = st.checkbox("Overwrite existing frames if already extracted", value=False)
 

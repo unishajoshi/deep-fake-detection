@@ -148,7 +148,7 @@ def evaluate_on_all_sets(selected_models, streamlit_mode=False):
 
     subsets = {
         "Balanced": test_balanced,
-        "Colab": celeb_test,
+        "Celeb": celeb_test,
         "FaceForensics++": ffpp_test
     }
 
@@ -190,8 +190,7 @@ def evaluate_on_balanced_set_agewise(selected_models, transform=None, streamlit_
     original_df = pd.read_csv("final_output/frame_level_annotations_source.csv")
     n_test = len(balanced_df)
 
-    # Age groups (match your age binning logic)
-    age_groups = ["0-10", "10-19", "19-35", "36-50", "51+"]
+    age_groups = ["0-10", "10-18", "19-35", "36-50", "51+"]
 
     def get_age_splits(df):
         return {
@@ -219,8 +218,6 @@ def evaluate_on_balanced_set_agewise(selected_models, transform=None, streamlit_
     for model_name in selected_models:
         model = get_model(model_name)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-        # ✅ Load trained checkpoint
         model.load_state_dict(torch.load(f"checkpoints/{model_name}_best.pth", map_location=device))
         model = model.to(device)
         model.eval()
@@ -228,16 +225,16 @@ def evaluate_on_balanced_set_agewise(selected_models, transform=None, streamlit_
         model_results = {}
 
         for dataset_name, df in datasets.items():
-            # ✅ Evaluate overall
-            model_results[f"overall_{dataset_name}"] = evaluate_model(model, {"overall": df}, transform).get("overall", {
+            # ✅ Evaluate overall with tuple key
+            model_results[(dataset_name, "overall")] = evaluate_model(model, {"overall": df}, transform).get("overall", {
                 "auc": None, "pauc": None, "eer": None
             })
 
-            # ✅ Evaluate per age group
+            # ✅ Evaluate each age group with tuple keys
             age_split = get_age_splits(df)
             for group, group_df in age_split.items():
                 group_metrics = evaluate_model(model, {group: group_df}, transform)
-                model_results[f"{dataset_name}_{group}"] = group_metrics.get(group, {
+                model_results[(dataset_name, group)] = group_metrics.get(group, {
                     "auc": None, "pauc": None, "eer": None
                 })
 
@@ -299,7 +296,7 @@ def evaluate_on_all_sets_for_trained_models(selected_models, source_name, stream
 
     subsets = {
         "Balanced": test_balanced,
-        "Colab": celeb_test,
+        "Celeb": celeb_test,
         "FaceForensics++": ffpp_test
     }
 
